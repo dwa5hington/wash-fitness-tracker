@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wa$h Fitness Tracker — Mr. Washington</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;}
+.app-nav{background:var(--gray);border-bottom:2px solid var(--mid);display:flex;align-items:center;padding:0 20px;position:sticky;top:0;z-index:300;overflow-x:auto;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:4px;color:var(--gold);padding:14px 20px 14px 0;border-right:1px solid var(--mid);white-space:nowrap;flex-shrink:0;}
+.nav-btn{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:2px;padding:14px 18px;background:none;border:none;color:var(--muted);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;flex-shrink:0;}
+.nav-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.nav-btn.active.nb-log{color:var(--green);border-bottom-color:var(--green);}
+.nav-btn.active.nb-hist{color:var(--blue-l);border-bottom-color:var(--blue-l);}
+.nav-btn.active.nb-prog{color:var(--purple);border-bottom-color:var(--purple);}
+.screen{display:none;max-width:860px;margin:0 auto;padding:0 16px 80px;}
+.screen.active{display:block;}
+.today-hero{padding:36px 16px 24px;text-align:center;background:radial-gradient(ellipse at top,#0a1020 0%,var(--black) 64%);margin:0 -16px;}
+.hero-eyebrow{font-size:.64rem;letter-spacing:6px;text-transform:uppercase;color:#1a2850;margin-bottom:8px;}
+.today-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,9vw,5.5rem);letter-spacing:8px;line-height:.92;}
+.today-hero h1 em{color:var(--gold);font-style:normal;}
+.today-sub{margin-top:10px;font-size:.74rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
+.plan-selector{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.plan-pill{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:2px;padding:8px 20px;border-radius:999px;border:1px solid #1a2040;background:var(--mid);color:var(--muted);cursor:pointer;}
+.plan-pill.active{background:var(--gold-d);border-color:var(--gold);color:var(--gold-l);}
+.session-info{max-width:760px;margin:18px auto 0;background:var(--gray);border:1px solid #1a2040;border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.si-date{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--gold);}
+.si-type-wrap{display:flex;gap:6px;flex-wrap:wrap;}
+.si-type{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:1px;padding:5px 12px;border-radius:999px;border:1px solid #1a2040;background:var(--deep);color:var(--muted);cursor:pointer;}
+.si-type.active{background:var(--gold-d);border-color:var(--gold);color:var(--gold-l);}
+.prog-wrap{background:var(--mid);border-radius:8px;padding:12px 16px;margin-top:16px;}
+.prog-lbl{display:flex;justify-content:space-between;font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.prog-pct{font-weight:700;color:var(--gold);}
+.prog-track{height:5px;background:#0a0e1e;border-radius:999px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:999px;width:0%;background:linear-gradient(90deg,var(--gold-d),var(--gold));}
+.plan-panel{display:none;}
+.plan-panel.active{display:block;}
+.phase{margin-top:24px;}
+.ph-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--mid);}
+.ph-name{font-family:'Bebas Neue',sans-serif;font-size:1.12rem;letter-spacing:3px;color:var(--gold-l);}
+.ph-time{margin-left:auto;background:var(--deep);padding:3px 10px;border-radius:999px;font-size:.63rem;font-weight:700;color:var(--muted);letter-spacing:1px;white-space:nowrap;}
+.ex{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;margin-bottom:6px;border-radius:8px;background:var(--gray);border:1px solid var(--mid);cursor:pointer;}
+.ex.done{background:#0a100c;border-color:var(--green);}
+.ex-chk{width:24px;height:24px;border-radius:50%;border:2px solid #1a2040;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:transparent;margin-top:1px;}
+.ex.done .ex-chk{background:var(--green);border-color:var(--green);color:var(--black);}
+.ex-body{flex:1;}
+.ex-name{font-weight:700;font-size:.88rem;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.ex.done .ex-name{color:var(--gl);}
+.lb-b,.pr-f,.nw-f{font-size:.56rem;font-weight:700;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:1px;}
+.lb-b{background:rgba(224,104,40,.14);border:1px solid rgba(224,104,40,.35);color:var(--orange);}
+.pr-f{background:#1a1000;border:1px solid var(--gold-d);color:var(--gold);}
+.nw-f{background:rgba(80,192,255,.12);border:1px solid rgba(80,192,255,.35);color:var(--blue-l);}
+.ex-detail{font-size:.73rem;color:var(--muted);margin-top:3px;line-height:1.5;}
+.ex-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.tag{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:1px;}
+.t-legs{background:rgba(74,143,212,.13);color:var(--blue-l);}
+.t-glute{background:rgba(224,144,48,.12);color:var(--amber);}
+.t-upper{background:rgba(155,114,208,.12);color:var(--purple);}
+.t-core{background:rgba(76,175,125,.13);color:var(--green);}
+.t-cardio{background:rgba(224,72,72,.11);color:var(--red);}
+.t-flex{background:rgba(155,114,208,.12);color:var(--purple);}
+.t-bk{background:rgba(224,104,40,.12);color:var(--orange);}
+.t-pwr{background:rgba(212,168,67,.13);color:var(--gold);}
+.t-mob{background:rgba(58,173,168,.11);color:var(--teal);}
+.ex-timer{font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:2px;color:var(--muted);white-space:nowrap;margin-top:1px;flex-shrink:0;}
+.ex.done .ex-timer{color:var(--green);}
+.tip{margin-top:16px;background:var(--deep);border-left:3px solid var(--gold);padding:11px 14px;font-size:.76rem;color:var(--muted);line-height:1.65;border-radius:0 6px 6px 0;}
+.tip strong{color:var(--white);display:block;margin-bottom:3px;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;}
+.log-hero{padding:26px 0 18px;text-align:center;background:radial-gradient(ellipse at top,#0d1a00 0%,var(--black) 60%);margin:0 -16px;}
+.log-hero h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:6px;color:var(--green);}
+.log-hero p{font-size:.7rem;color:var(--muted);margin-top:5px;letter-spacing:2px;text-transform:uppercase;}
+.sec-l{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:4px;color:var(--gold);margin-top:22px;margin-bottom:2px;display:flex;align-items:center;gap:10px;}
+.sec-l::after{content:'';flex:1;height:1px;background:var(--mid);}
+.lift-card{background:var(--gray);border:1px solid var(--mid);border-radius:12px;margin-top:12px;overflow:hidden;}
+.lift-card.major{border-left:4px solid var(--gold);}
+.lift-card.logged{border-color:var(--green);}
+.lc-head{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;}
+.lc-icon{font-size:.95rem;}
+.lc-info{flex:1;}
+.lc-name{font-weight:700;font-size:.86rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.maj-b{font-size:.54rem;font-weight:700;background:rgba(212,168,67,.14);border:1px solid rgba(212,168,67,.4);color:var(--gold-l);padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:1px;}
+.lc-sub{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.lc-stat{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;}
+.lift-card.logged .lc-stat{color:var(--green);}
+.lc-best{font-size:.65rem;color:var(--gold);white-space:nowrap;text-align:right;}
+.lc-chev{font-size:.72rem;color:var(--muted);}
+.lc-chev.open{transform:rotate(180deg);}
+.lc-body{display:none;padding:0 14px 14px;border-top:1px solid var(--mid);}
+.lc-body.open{display:block;}
+.ip-wrap{background:#08090e;border:1px solid #141828;border-radius:6px;padding:8px 12px;margin-top:9px;}
+.ip-t{font-size:.56rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:5px;}
+.ip-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #0e1018;font-size:.7rem;gap:8px;}
+.ip-row:last-child{border-bottom:none;}
+.ip-date{color:var(--muted);flex-shrink:0;}
+.ip-sets{color:var(--white);font-weight:600;text-align:right;}
+.sets-hdr{display:grid;grid-template-columns:30px 1fr 1fr 1fr 24px;gap:5px;padding:8px 0 4px;font-size:.54rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--mid);text-align:center;}
+.set-row{display:grid;grid-template-columns:30px 1fr 1fr 1fr 24px;gap:5px;padding:5px 0;border-bottom:1px solid #0e0e18;align-items:center;}
+.set-num{font-family:'Bebas Neue',sans-serif;font-size:.82rem;color:var(--muted);text-align:center;background:#0e0e18;border-radius:4px;padding:4px 0;}
+.si{background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--gold-l);font-family:'Bebas Neue',sans-serif;font-size:.98rem;text-align:center;padding:5px 2px;width:100%;outline:none;}
+.si.filled{border-color:var(--green);color:var(--gl);}
+.fi{background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.7rem;text-align:center;padding:5px 2px;width:100%;outline:none;}
+.sc{width:22px;height:22px;border-radius:50%;border:2px solid #1a2040;background:none;cursor:pointer;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:transparent;}
+.sc.done{background:var(--green);border-color:var(--green);color:var(--black);}
+.add-btn{background:none;border:1px dashed #1a2040;border-radius:6px;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:.73rem;letter-spacing:2px;padding:6px;width:100%;cursor:pointer;margin-top:6px;}
+.nr{display:flex;align-items:center;gap:6px;margin-top:8px;}
+.nl{font-size:.56rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.ni{flex:1;background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--white);font-size:.74rem;padding:6px 9px;outline:none;}
+.save-bar{position:sticky;bottom:0;z-index:100;background:rgba(10,12,20,.95);backdrop-filter:blur(10px);border-top:1px solid var(--mid);padding:10px 16px;display:flex;align-items:center;gap:8px;margin:0 -16px;}
+.save-info{flex:1;font-size:.68rem;color:var(--muted);}
+.save-info span{color:var(--green);font-weight:700;}
+.btn{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:2px;padding:8px 14px;border-radius:6px;border:none;cursor:pointer;}
+.btn-sv{background:var(--gold);color:var(--black);}
+.btn-cl{background:var(--mid);color:var(--muted);border:1px solid #1a2040;}
+.sf{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);background:var(--gd);border:1px solid #2a5a32;padding:4px 10px;border-radius:999px;opacity:0;}
+.sf.show{opacity:1;}
+.hist-hero{padding:24px 0 16px;text-align:center;background:radial-gradient(ellipse at top,#040d20 0%,var(--black) 58%);margin:0 -16px;}
+.hist-hero h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:6px;color:var(--blue-l);}
+.hist-hero p{font-size:.7rem;color:var(--muted);margin-top:5px;letter-spacing:2px;text-transform:uppercase;}
+.filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px;padding:12px 14px;background:var(--gray);border-radius:10px;}
+.filter-label{font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);width:100%;margin-bottom:2px;}
+.f-btn{font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:1px;padding:5px 12px;border-radius:999px;border:1px solid #1a2040;background:var(--mid);color:var(--muted);cursor:pointer;}
+.f-btn.active{background:#0a1830;border-color:var(--blue-l);color:var(--blue-l);}
+.hist-empty{text-align:center;padding:32px 14px;color:var(--muted);font-size:.78rem;line-height:1.7;}
+.hlb{margin-top:18px;}
+.hln{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:var(--gold);margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.hln::after{content:'';flex:1;height:1px;background:var(--mid);}
+.hs{background:var(--gray);border:1px solid var(--mid);border-radius:8px;padding:11px 14px;margin-bottom:6px;}
+.hsh{display:flex;justify-content:space-between;font-size:.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:7px;}
+.hsh .dt{color:var(--blue-l);font-weight:700;}
+.hsr{display:flex;gap:9px;font-size:.73rem;padding:3px 0;border-bottom:1px solid #0e0c14;color:var(--muted);}
+.hsr:last-child{border-bottom:none;}
+.hi{color:var(--white);font-weight:600;min-width:36px;}
+.hw{color:var(--gold-l);font-weight:700;min-width:64px;}
+.hrp{color:var(--green);min-width:54px;}
+.hn2{margin-top:6px;font-size:.68rem;color:var(--muted);font-style:italic;border-top:1px solid var(--mid);padding-top:5px;}
+.ch-btn{background:none;border:1px solid #3a1010;border-radius:6px;color:#704040;font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:2px;padding:7px 14px;cursor:pointer;margin-top:18px;display:block;width:100%;}
+.prog-hero{padding:24px 0 16px;text-align:center;background:radial-gradient(ellipse at top,#0a0020 0%,var(--black) 58%);margin:0 -16px;}
+.prog-hero h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:6px;color:var(--purple);}
+.prog-hero p{font-size:.7rem;color:var(--muted);margin-top:5px;letter-spacing:2px;text-transform:uppercase;}
+.pc{background:var(--gray);border:1px solid var(--mid);border-radius:12px;padding:14px 16px;margin-top:12px;}
+.pc-name{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:3px;color:var(--white);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.pc-pr{font-size:.68rem;font-weight:700;color:var(--gold-l);}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.bar-date{font-size:.62rem;color:var(--muted);min-width:76px;}
+.bar-track{flex:1;height:22px;background:#0e0c14;border-radius:4px;overflow:hidden;position:relative;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold));min-width:4px;}
+.bar-val{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:.76rem;color:var(--white);}
+.bk-box{margin-top:20px;background:var(--gray);border:1px solid #1a2040;border-radius:10px;padding:14px 16px;}
+.bk-box-ttl{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:3px;color:var(--gold);margin-bottom:6px;}
+.bk-box-dsc{font-size:.72rem;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+
+/* ═══════ GAMIFICATION SYSTEM ═══════ */
+.xp-hero{max-width:760px;margin:0 auto;padding:18px 16px 0;}
+.xp-card{background:linear-gradient(135deg,#0a0c14 0%,#14182a 100%);border:1px solid #2a2040;border-radius:14px;padding:14px 16px;position:relative;overflow:hidden;}
+.xp-card::before{content:'';position:absolute;top:-50%;right:-20%;width:200px;height:200px;background:radial-gradient(circle,rgba(212,168,67,.08) 0%,transparent 70%);pointer-events:none;}
+.xp-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;position:relative;z-index:1;}
+.xp-level-num{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:2px;color:var(--gold);line-height:1;}
+.xp-level-info{flex:1;}
+.xp-level-name{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:3px;color:var(--white);line-height:1.1;}
+.xp-level-sub{font-size:.63rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:3px;}
+.xp-diamonds{display:flex;align-items:center;gap:5px;background:rgba(80,192,255,.08);border:1px solid rgba(80,192,255,.3);border-radius:999px;padding:5px 11px;font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:1px;color:var(--blue-l);}
+.xp-bar-wrap{margin-top:4px;position:relative;z-index:1;}
+.xp-bar-labels{display:flex;justify-content:space-between;font-size:.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px;}
+.xp-bar-current{color:var(--gold);font-weight:700;}
+.xp-bar-track{height:7px;background:#0a0c14;border-radius:999px;overflow:hidden;border:1px solid #1a2040;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-d) 0%,var(--gold) 50%,var(--gold-l) 100%);border-radius:999px;transition:width .6s;box-shadow:0 0 12px rgba(212,168,67,.4);}
+.xp-phase-row{display:flex;gap:6px;margin-top:12px;position:relative;z-index:1;}
+.xp-phase-chip{flex:1;background:rgba(212,168,67,.06);border:1px solid #1a2040;border-radius:6px;padding:6px 8px;text-align:center;}
+.xp-phase-chip.active{background:rgba(212,168,67,.14);border-color:var(--gold-d);}
+.xp-phase-chip.done{background:var(--gd);border-color:#2a5a32;}
+.xp-phase-label{font-size:.55rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);}
+.xp-phase-chip.active .xp-phase-label{color:var(--gold);}
+.xp-phase-chip.done .xp-phase-label{color:var(--green);}
+.xp-phase-name{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:1.5px;color:var(--muted);margin-top:2px;line-height:1;}
+.xp-phase-chip.active .xp-phase-name{color:var(--white);}
+.xp-phase-chip.done .xp-phase-name{color:var(--gl);}
+
+/* LEVEL LADDER */
+.level-ladder{background:var(--gray);border:1px solid var(--mid);border-radius:10px;padding:14px 16px;margin-top:16px;}
+.level-ladder-ttl{font-family:'Bebas Neue',sans-serif;font-size:.82rem;letter-spacing:3px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.level-ladder-ttl::after{content:'';flex:1;height:1px;background:var(--mid);}
+.ladder-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #0e1018;}
+.ladder-row:last-child{border-bottom:none;}
+.ladder-num{font-family:'Bebas Neue',sans-serif;font-size:.9rem;color:var(--muted);min-width:40px;letter-spacing:1px;}
+.ladder-name{flex:1;font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:2px;color:var(--muted);}
+.ladder-xp{font-size:.62rem;color:#2a3050;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;}
+.ladder-row.current{background:rgba(212,168,67,.08);margin:0 -16px;padding:6px 16px;border-left:3px solid var(--gold);}
+.ladder-row.current .ladder-num,.ladder-row.current .ladder-name{color:var(--gold);}
+.ladder-row.current .ladder-xp{color:var(--gold-l);}
+.ladder-row.achieved .ladder-num,.ladder-row.achieved .ladder-name{color:var(--green);}
+.ladder-row.achieved .ladder-xp{color:#1a4a22;}
+
+/* XP FLOAT ANIMATION */
+.xp-float{position:fixed;z-index:9999;font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;color:var(--gold-l);text-shadow:0 0 12px rgba(212,168,67,.8);pointer-events:none;animation:xpFloat 1.4s ease-out forwards;}
+.xp-float.diamond{color:var(--blue-l);text-shadow:0 0 12px rgba(80,192,255,.8);}
+@keyframes xpFloat{0%{opacity:0;transform:translateY(0) scale(.8);}20%{opacity:1;transform:translateY(-10px) scale(1.15);}100%{opacity:0;transform:translateY(-70px) scale(1);}}
+
+.level-up-banner{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .3s;}
+.level-up-banner.show{display:flex;}
+.level-up-box{background:linear-gradient(135deg,#14182a 0%,#0a0c14 100%);border:2px solid var(--gold);border-radius:16px;padding:28px 24px;text-align:center;max-width:360px;animation:levelUp .5s;box-shadow:0 0 40px rgba(212,168,67,.5);}
+@keyframes levelUp{0%{transform:scale(.6);opacity:0;}50%{transform:scale(1.1);}100%{transform:scale(1);opacity:1;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.level-up-eyebrow{font-size:.65rem;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.level-up-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:4px;color:var(--white);line-height:1;margin-bottom:6px;}
+.level-up-emoji{font-size:3rem;margin:12px 0;}
+.level-up-name{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:var(--gold-l);margin-bottom:10px;}
+.level-up-msg{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.level-up-btn{background:var(--gold);color:var(--black);border:none;font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:3px;padding:10px 24px;border-radius:8px;cursor:pointer;}
+
+/* EXERCISE XP BADGE */
+.xp-badge{font-size:.55rem;font-weight:700;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:var(--gold);padding:2px 6px;border-radius:999px;letter-spacing:1px;white-space:nowrap;}
+.ex.done .xp-badge{background:var(--gd);border-color:#2a5a32;color:var(--gl);}
+/* ═══════ END GAMIFICATION ═══════ */
+
+footer{text-align:center;padding:18px;font-size:.68rem;color:var(--muted);border-top:1px solid var(--mid);letter-spacing:2px;text-transform:uppercase;}
+footer span{color:var(--gold);}
+@media(max-width:580px){.app-nav{padding:0 12px;}.screen{padding:0 10px 80px;}.sets-hdr,.set-row{grid-template-columns:24px 1fr 1fr 64px 22px;gap:3px;}}
+</style>
+</head>
+<body>
+
+<nav class="app-nav">
+  <div class="nav-logo">WA$H</div>
+  <button class="nav-btn active" onclick="goTo('today')" id="nb-today">🏋🏾 TODAY</button>
+  <button class="nav-btn nb-log" onclick="goTo('log')" id="nb-log">📋 LOG</button>
+  <button class="nav-btn nb-hist" onclick="goTo('hist')" id="nb-hist">📈 HISTORY</button>
+  <button class="nav-btn nb-prog" onclick="goTo('prog')" id="nb-prog">📊 PROGRESS</button>
+</nav>
+
+<div class="screen active" id="screen-today">
+
+  <!-- XP / LEVEL HERO -->
+  <div class="xp-hero">
+    <div class="xp-card">
+      <div class="xp-top">
+        <div class="xp-level-num" id="xp-lvl-num">LVL 1</div>
+        <div class="xp-level-info">
+          <div class="xp-level-name" id="xp-lvl-name">ROOKIE</div>
+          <div class="xp-level-sub" id="xp-lvl-sub">Week 7 · Phase 2 Active</div>
+        </div>
+        <div class="xp-diamonds">💎 <span id="xp-diamonds">0</span></div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-labels">
+          <span><span class="xp-bar-current" id="xp-current">0</span> / <span id="xp-next">1000</span> XP</span>
+          <span id="xp-to-go">1000 to go</span>
+        </div>
+        <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
+      </div>
+      <div class="xp-phase-row">
+        <div class="xp-phase-chip" id="phase-1"><div class="xp-phase-label">Phase 1</div><div class="xp-phase-name">Foundation</div></div>
+        <div class="xp-phase-chip active" id="phase-2"><div class="xp-phase-label">Phase 2</div><div class="xp-phase-name">Build</div></div>
+        <div class="xp-phase-chip" id="phase-3"><div class="xp-phase-label">Phase 3</div><div class="xp-phase-name">Elite</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="today-hero">
+    <div class="hero-eyebrow">Prolific Partners · Week 7</div>
+    <h1>LET'S BE <em>GREAT</em></h1>
+    <div class="today-sub" id="today-date-sub">Loading...</div>
+  </div>
+
+  <div style="max-width:760px;margin:18px auto 0;">
+    <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px;">Choose Today's Plan</div>
+    <div class="plan-selector">
+      <button class="plan-pill active" onclick="setPlan('tue-may5-fullbody-lower',this)">🦵 Tue Full Body · Lower Focus</button>
+      <button class="plan-pill" onclick="setPlan('tue-apr28-fullbody-upper',this)">🔥 Tue Full Body · Upper Focus</button>
+      <button class="plan-pill" onclick="setPlan('mon-apr27-fullbody',this)">💪 Mon Full Body · Lower Focus</button>
+      <button class="plan-pill" onclick="setPlan('tue-dynamic-upper',this)">⚡ Tue Dynamic Upper</button>
+      <button class="plan-pill" onclick="setPlan('mon-late-night',this)">🌙 Mon Late Night Heavy</button>
+      <button class="plan-pill" onclick="setPlan('legs-strength',this)">🦵 Mon W7 Leg Strength</button>
+      <button class="plan-pill" onclick="setPlan('legs-dynamic',this)">⚡ Mon W7 Leg Power</button>
+      <button class="plan-pill" onclick="setPlan('upper-friday',this)">🔥 Fri W7 Upper Closer</button>
+      <button class="plan-pill" onclick="setPlan('full-body',this)">⚡ Full Body</button>
+      <button class="plan-pill" onclick="setPlan('flush',this)">🔄 Flush</button>
+    </div>
+  </div>
+
+  <div class="session-info">
+    <div class="si-date" id="today-date-label">Today</div>
+    <div class="si-type-wrap">
+      <button class="si-type active" onclick="setType(this)">Leg Day</button>
+      <button class="si-type" onclick="setType(this)">Upper Body</button>
+      <button class="si-type" onclick="setType(this)">Full Body</button>
+      <button class="si-type" onclick="setType(this)">Flush</button>
+    </div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-lbl"><span>Today's Progress</span><span class="prog-pct" id="today-pct">0% Complete</span></div>
+    <div class="prog-track"><div class="prog-fill" id="today-fill"></div></div>
+  </div>
+
+  <!-- MON LATE NIGHT HEAVY (extra back care, solid intensity) -->
+  <!-- TUE DYNAMIC UPPER (majority upper, light lower touches, core + cardio) -->
+  <!-- MON APR 27 FULL BODY · LOWER FOCUS · 75 min · solid intensity -->
+  <!-- TUE APR 28 FULL BODY · UPPER FOCUS · 75-90 min -->
+  <!-- TUE MAY 5 FULL BODY · LOWER FOCUS · 90 min · energy high -->
+  <div class="plan-panel active" id="plan-tue-may5-fullbody-lower">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup</div><div class="ph-time">0–10 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Treadmill Walk + Jog <span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 min walk 9% incline 3mph + 5 min jog no incline 6mph · Same warmup as last Tue</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">10 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip CARs + Bird Dog + Cat-Cow <span class="xp-badge">+15 XP</span></div><div class="ex-detail">10 CARs each · 8 bird dog each · 10 cat-cow · Hips + posterior chain primed · Back care protocol 🔶</div><div class="ex-tags"><span class="tag t-mob">Mobility</span></div></div><div class="ex-timer">3 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Lower Body — PR Hunting</div><div class="ph-time">10–45 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press <span class="pr-f">📈 Beat 500×10</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 · 🔥 All-time PR: 500×10 Medium (Apr 20) · Push 510×10 or 520×8 today · Full depth every rep</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hacksaw Squat / Back Squat <span class="pr-f">📈 Beat 290×10</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 · Last (Tue Apr 28): Machine 290×10 Medium · Push 300×10 or 310×8 · Drive through heels</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bulgarian Split Squat <span class="pr-f">📈 Beat BB 155×10</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×10 each · PR: BB 155×10 (Apr 20) · Push 165×10 or DB 80s · Controlled descent · Single-leg king</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×10ea</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip Thrust <span class="pr-f">📈 Beat 265×13</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×12 · PR: 265×13 Medium (Apr 13) · Push 275×12 or 285×10 · 3-sec top hold · Full glute squeeze</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">RDL <span class="pr-f">📈 Beat 90×15</span><span class="xp-badge">+75 XP</span></div><div class="ex-detail">3×12 · Best: 90×15 (Apr 13) · Push 100×12 or 115×10 · 4-sec eccentric · Hamstring stretch focus</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×12</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Upper Body Touches</div><div class="ph-time">45–60 min</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bench Press — Moderate <span class="xp-badge">+75 XP</span></div><div class="ex-detail">3×8 · NOT a PR day for bench · Keep at 245-265 range · Maintain pressing strength · Last: 315×4 Hard</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×8</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pull-Up <span class="pr-f">📈 Beat 20</span><span class="xp-badge">+75 XP</span></div><div class="ex-detail">3×max · Last: 20/20/20 Easy (Apr 17) · You skipped these last 2 sessions · Time to come back strong · Push 22+</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×max</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Abs + Cardio Finisher</div><div class="ph-time">60–80 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Leg Raise + Pallof Press + Plank <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 10 leg raise / 12 pallof each side / 45 sec plank · Full core circuit</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">3 rounds</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Adduction + Abduction Machine <span class="xp-badge">+25 XP</span></div><div class="ex-detail">3×15 each · Inner/outer thigh · Superset them back to back · Great complement to lower day</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×15</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Treadmill Sprint Intervals <span class="xp-badge">+50 XP</span></div><div class="ex-detail">8 min · 20 sec sprint / 40 sec jog × 8 rounds · Same proven cardio protocol</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Flexibility + Cooldown</div><div class="ph-time">80–90 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pigeon + Spinal Twist + Quad Stretch <span class="xp-badge">+25 XP</span></div><div class="ex-detail">90 sec pigeon each side · 60 sec twist each · 60 sec quad stretch each · Lower-body focused recovery</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Child's Pose + Lat Hang + Chest Stretch <span class="xp-badge">+25 XP</span></div><div class="ex-detail">1 min child's pose · 30 sec lat hang · 60 sec chest stretch each · Decompress the spine 🔶</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">4 min</div></div>
+    </div>
+
+    <div class="tip"><strong>🦵 Tue Full Body · Lower Focus · 90 min</strong>5 lower body compounds chasing PRs (Leg Press, Hacksaw Squat, BSS, Hip Thrust, RDL), upper body maintenance (Bench + Pull-Ups), adduction/abduction, full ab circuit + sprint cardio, complete flexibility flow. Total: <strong>980 XP + 💎5</strong>. Beat Leg Press 510+, Squat 300+, BSS 165+, Hip Thrust 275+, RDL 100+. Let's be great, Mr. Washington! 🔥🏆</div>
+  </div>
+
+  <div class="plan-panel" id="plan-tue-apr28-fullbody-upper">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup</div><div class="ph-time">0–8 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Row Machine + Arm Circles <span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 min row · Build pace · Then 30 sec arm circles each direction · Upper body blood flow primed</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Band Pull-Aparts + Shoulder CARs <span class="xp-badge">+15 XP</span></div><div class="ex-detail">2×20 pull-aparts · 10 shoulder circles each direction · Rear delts + rotator cuff activation</div><div class="ex-tags"><span class="tag t-mob">Mobility</span></div></div><div class="ex-timer">3 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Upper Body — Primary Push & Pull</div><div class="ph-time">8–38 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bench Press <span class="pr-f">📈 Beat 255×10</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×8-10 · Last (Apr 17): 255×10 Medium · All-time: 315×4 · Push 265×10 or 275×8 today · Log every set</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4×8-10</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pull-Up <span class="pr-f">📈 Beat 20</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×max · Last: 20/20/20 Easy (Apr 17) · Push 22+ today or add 10lb weight · Dead hang each rep</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4×max</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">DB Shoulder Press <span class="pr-f">📈 Beat 230×20</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×10-12 · 🔥 Last: Machine 230×20 Hard (Apr 27) · Today try DB version, push 100s × 12+ · Full lockout</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×10-12</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Row <span class="pr-f">📈 Beat 210</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×12-15 · Last (Apr 13): 210×16 Medium · Today push 220+ · Wide grip · Chest tall · Squeeze at end</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×12-15</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Upper Accessory + Arms</div><div class="ph-time">38–55 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Lateral Raise + Face Pull Superset <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 12 lateral / 15 face pull · Side delt + rear delt · Healthy shoulders</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Tricep Pushdown + Hammer Curl Superset <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 12 pushdown / 12 hammer curl · Arm pump finisher</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Lower Body Touches (Maintenance)</div><div class="ph-time">55–67 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press — Moderate <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · Moderate weight (~360 lbs) · NOT a PR day for legs · Last Monday's full-body had alt lifts · Maintain stimulus</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">RDL — Moderate <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · DB or BB 90-115 lbs · 4-sec eccentric · Hamstring + glute stretch</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×12</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Abs + Cardio Finisher</div><div class="ph-time">67–82 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Leg Raise + Pallof Press + Plank <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 10 leg raises / 12 pallof each side / 45 sec plank · Core circuit</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">3 rounds</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Treadmill Sprint Intervals <span class="xp-badge">+50 XP</span></div><div class="ex-detail">8 min · 20 sec sprint / 40 sec jog × 8 rounds · Same protocol as last sessions · Cardio finisher</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Flexibility + Cooldown</div><div class="ph-time">82–90 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Doorway Chest Stretch + Lat Hang <span class="xp-badge">+25 XP</span></div><div class="ex-detail">60 sec each side chest · 30 sec lat hang · Open up after pressing volume</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">3 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Spinal Twist + Pigeon + Child's Pose <span class="xp-badge">+25 XP</span></div><div class="ex-detail">60 sec each side twist · 90 sec pigeon each · 1 min child's pose · Full flexibility flow</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">5 min</div></div>
+    </div>
+
+    <div class="tip"><strong>🔥 Tue Full Body · Upper Focus · 75-90 min</strong>4 major upper compound lifts chasing PRs (Bench, Pull-Up, DB Shoulder, Row), arm pump supersets, lower body maintenance work, full ab circuit + sprint cardio, complete flexibility flow. Total: <strong>880 XP + 💎5</strong>. Beat Bench 265+, Pull-Up 22+, Shoulder 100s+, Row 220+. Let's get it, Mr. Washington! 💪</div>
+  </div>
+
+  <div class="plan-panel" id="plan-mon-apr27-fullbody">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup</div><div class="ph-time">0–8 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline Walk + Mobility Flow <span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 min · 8% incline · 3.5 mph · Then 3 min cat-cow + bird dog + hip CARs · Posterior chain + hips primed</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span><span class="tag t-mob">Mobility</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Lower Body Compound — Beat Last Monday</div><div class="ph-time">8–38 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press <span class="pr-f">📈 Beat 500</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 · 🔥 PR: 500×10 Medium (Apr 20) · Push 510×10 or 500×12 tonight · Full depth · Log every set in LOG tab</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bulgarian Split Squat <span class="pr-f">📈 Beat 155</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×10 each · 🔥 PR: BB 155×10 Medium (Apr 20) · Push 165×10 or BB 155×12 · Controlled descent</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×10ea</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip Thrust <span class="pr-f">📈 Target 275+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×12 · Last (W7): 265×13 Medium · Tonight push 275×12 · 3-sec top hold · Full glute squeeze</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×12</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Upper Body Compound</div><div class="ph-time">38–58 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">DB Bench Press <span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 · DBs allow neutral wrist + safer shoulder path · Drive hard, controlled lower</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pull-Up <span class="pr-f">📈 Beat 20</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×max · Last: 20/20/20 Easy (Apr 17) · Push 22+ reps tonight · Dead hang each rep</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×max</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">DB Shoulder Press + Lateral Raise Superset <span class="xp-badge">+75 XP</span></div><div class="ex-detail">3 rounds · 10 press / 12 lateral · Shoulder builder · Last shoulder: 100×12 Medium</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Core + Cardio Finisher</div><div class="ph-time">58–72 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Leg Raise + Plank Circuit <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 10 leg raises / 45 sec plank · Tight core, controlled tempo</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">3 rounds</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Stairmaster Intervals <span class="xp-badge">+50 XP</span></div><div class="ex-detail">8 min · 1:30 moderate / :30 hard × 4 rounds · Heart rate finisher</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Cooldown</div><div class="ph-time">72–75 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pigeon + Spinal Twist + Chest Stretch <span class="xp-badge">+25 XP</span></div><div class="ex-detail">90 sec each · Hip openers + decompression after lower work</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">3 min</div></div>
+    </div>
+
+    <div class="tip"><strong>💪 Mon Full Body · Lower Focus · 75 min</strong>Lower-leaning full body to start the week. 3 lower compounds (chasing PRs) + 3 upper compounds + core/cardio. Total: <strong>715 XP + 💎5</strong>. Hit Leg Press 510, Split Squat 165, Hip Thrust 275 — let's stack PRs, Mr. Washington. 🔥</div>
+  </div>
+
+  <div class="plan-panel" id="plan-tue-dynamic-upper">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup + Shoulder Prep</div><div class="ph-time">0–10 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Row Machine — Building Pace <span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 min · Start easy, build to moderate · Full body blood flow · Get the lats and shoulders warm</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Band Pull-Aparts + Shoulder CARs + T-Spine Rotation <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+15 XP</span></div><div class="ex-detail">2×20 pull-aparts · 10 shoulder circles each direction · 10 t-spine rotations each side · Rear delts + mid-back + thoracic mobility</div><div class="ex-tags"><span class="tag t-bk">Back Care</span><span class="tag t-mob">Mobility</span></div></div><div class="ex-timer">5 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>⚡</span><div class="ph-name">Dynamic Push Block</div><div class="ph-time">10–34 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Explosive Push-Up to Plyo <span class="nw-f">🆕 Dynamic</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4 rounds · 8 reps · Drive hard off the floor · Clap or airtime if you've got it · CNS primer before loading</div><div class="ex-tags"><span class="tag t-pwr">Power</span><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4×8</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Landmine Press — Alternating <span class="pr-f">📈 Dynamic Push</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×8 each arm · Rotational press · Back-friendly shoulder builder · Explosive drive up, controlled down</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-pwr">Power</span></div></div><div class="ex-timer">4×8ea</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline DB Press + Push-Up Superset <span class="xp-badge">+75 XP</span></div><div class="ex-detail">3 rounds · 10 incline press / 10 push-ups to failure · Upper chest emphasis · Push-ups finish the pump</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Chest Fly → Tricep Rope Pushdown <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 12 flies / 15 pushdowns · Squeeze + stretch · Pump finisher for push</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💥</span><div class="ph-name">Dynamic Pull Block</div><div class="ph-time">34–58 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Explosive Pull-Up <span class="pr-f">📈 Beat 20 reps</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4 sets · Max reps · Drive chest to bar · Apr 17: 20/20/20 Easy · Push 22+ today or add 10lb weight</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-pwr">Power</span></div></div><div class="ex-timer">4×max</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Single-Arm DB Row — Explosive <span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 each · Drive elbow hard to hip · Controlled 2-sec lower · Lat engagement + lower back protection</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">4×10ea</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Lat Pulldown — Wide + Underhand Superset <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+75 XP</span></div><div class="ex-detail">3 rounds · 10 wide grip / 10 underhand · Full stretch top · Squeeze lats at bottom</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Face Pull + Hammer Curl Superset <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 15 face pulls / 12 hammer curls · Rear delt + bicep pump</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Light Lower Touches (Recovery from Monday)</div><div class="ph-time">58–70 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Goblet Squat — Light + Slow <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · Light DB (35–45 lbs) · 3-sec descent · Blood flow + mobility, NOT heavy · Flush the legs from yesterday's PRs</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip Thrust — Light + Glute Activation <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×15 · Bodyweight or light (135 max) · 3-sec top hold · Glute pump, not strength work · Keep the posterior chain firing</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×15</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Core + Cardio Finisher</div><div class="ph-time">70–85 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Leg Raise + Russian Twist + Plank <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 10 leg raises / 20 twists / 45 sec plank · Back-safe rotational core</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">3 rounds</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Assault Bike Intervals <span class="xp-badge">+50 XP</span></div><div class="ex-detail">8 min · :30 all-out / :30 easy × 8 rounds · HIIT finisher · Burn without taxing legs</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Cooldown + Back Care</div><div class="ph-time">85–90 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Chest Stretch + Lat Hang + Spinal Twist <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+25 XP</span></div><div class="ex-detail">60 sec chest stretch each · 30 sec lat hang · 60 sec twist each side · Open up after all that pressing and pulling</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">5 min</div></div>
+    </div>
+
+    <div class="tip"><strong>⚡ Tuesday Dynamic Upper</strong>Upper-dominant with explosive power work up top, light lower touches to flush Monday's PRs without taxing. Total: <strong>980 XP + 💎5</strong> — that's enough to push you to <strong>LVL 2 GETTING PROLIFIC</strong> tonight. Let's get it, Mr. Washington. 💪</div>
+  </div>
+
+  <div class="plan-panel" id="plan-mon-late-night">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Extended Back Warmup</div><div class="ph-time">0–15 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline Walk — Longer <span class="xp-badge">+15 XP</span></div><div class="ex-detail">7 min · 10% incline · 3.2 mph · Let the posterior chain fully wake up before loading</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">7 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cat-Cow + Bird Dog + Dead Bug + Glute Bridge <span class="lb-b">🔶 Back Care Extra</span><span class="xp-badge">+25 XP</span></div><div class="ex-detail">90 sec cat-cow · 2×10 bird dog each · 2×10 dead bug · 2×15 glute bridges · Extra dead bug tonight for lumbar stability</div><div class="ex-tags"><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">6 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip CARs + 90/90 Prep <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 hip circles each side · 30 sec 90/90 each · Prime hip mobility for split squat depth</div><div class="ex-tags"><span class="tag t-mob">Mobility</span></div></div><div class="ex-timer">3 min</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Heavy Quad — Beat Week 7</div><div class="ph-time">15–48 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press — Heavy <span class="pr-f">📈 Target 510+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10-12 · 🔥 ALL-TIME PR: 500×10 Medium (Apr 20) · Push 510×10 or 500×12 next time · Log every set</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10-12</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bulgarian Split Squat <span class="pr-f">📈 Target 165+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 each · 🔥 PR: BB 155×10 Medium (Apr 20) · Push 165×10 next time · BB or DB · Protect the back on setup</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Extension — Heavy Pause <span class="xp-badge">+75 XP</span></div><div class="ex-detail">3×12 · 2-sec hold at peak · Pure quad isolation · Zero lower back load</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×12</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🍑</span><div class="ph-name">Posterior Chain — Protected</div><div class="ph-time">48–68 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">KB RDL (back-friendly) <span class="pr-f">📈 Beat 90 lbs</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×12 · Go KB over BB tonight — protects tight back · W7: KB 90×15 · Tonight bump weight · 4-sec eccentric</div><div class="ex-tags"><span class="tag t-glute">Glutes</span><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">4×12</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip Thrust <span class="pr-f">📈 Target 275+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×12 · W7: 265×13 Medium · Tonight push 275×12 · 3-sec top hold · Chin tucked, ribs down</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Lying Leg Curl <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · Prone position = spinal decompression built in · 4-sec lower · Hamstring finisher</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×12</div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Back-Safe Core + Extended Cooldown</div><div class="ph-time">68–90 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pallof Press + Dead Bug + Side Plank <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+35 XP</span></div><div class="ex-detail">3 rounds · 12 pallof each side · 10 dead bug · 30 sec side plank each · NO crunches, NO sit-ups tonight</div><div class="ex-tags"><span class="tag t-core">Core</span><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">3 rounds</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Calf Raise Superset <span class="xp-badge">+25 XP</span></div><div class="ex-detail">3 rounds · 20 seated / 15 standing · Easy finisher that doesn't tax the CNS</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×super</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pigeon + 90/90 + Child's Pose + Supine Twist <span class="lb-b">🔶 Back Care Extra</span><span class="xp-badge">+25 XP</span></div><div class="ex-detail">2 min pigeon each · 90 sec 90/90 each · 2 min child's pose · 1 min twist each side · Full lumbar decompression before bed — critical for tight back recovery</div><div class="ex-tags"><span class="tag t-flex">Flex</span><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">12 min</div></div>
+    </div>
+
+    <div class="tip"><strong>🌙 Monday Late Night · Heavy + Back Care</strong>Back was a little tight coming in — extra warmup, KB RDL instead of BB, zero spine-loaded core work, extended decompression at end. Still hitting your 3 major targets. Full session = <strong>790 XP + 💎5</strong>. Hydrate, eat protein, sleep deep. 💪</div>
+  </div>
+
+  <div class="plan-panel" id="plan-legs-strength">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup</div><div class="ph-time">0-10 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline Walk <span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 min · 10% incline · 3.5 mph</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cat-Cow + Bird Dog + Glute Bridge <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+15 XP</span></div><div class="ex-detail">90 sec cat-cow · 2×10 bird dog · 2×15 glute bridges</div><div class="ex-tags"><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">5 min</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Quad Dominant</div><div class="ph-time">10-36 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press <span class="pr-f">📈 Target 420+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×12 · Last Monday: 410×12 Medium · Push 420+ or 14 reps</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×12</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Split Squat <span class="pr-f">📈 Target 105+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 each · Last Monday: 100×10 · Bump to 105s</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Extension Drop + Pause <span class="nw-f">🆕 W7</span><span class="xp-badge">+75 XP</span></div><div class="ex-detail">3 sets · 10 reps → pause → drop 20% → 10 more</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×drop</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🍑</span><div class="ph-name">Posterior Chain</div><div class="ph-time">36-56 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">RDL <span class="pr-f">📈 Beat KB</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×10 · 4-sec eccentric · Last: KB 3×15 at 90 · Try BB today</div><div class="ex-tags"><span class="tag t-glute">Glutes</span><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hip Thrust <span class="pr-f">📈 Target 275+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×12 · Last: 265×13 · Push 275+ · 3-sec top hold</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Lying Leg Curl <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · 4-sec lower</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Calf Superset <span class="xp-badge">+50 XP</span></div><div class="ex-detail">3 rounds · 20 seated / 15 standing</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Upper Accessory</div><div class="ph-time">56-70 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Row <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · Wide grip · Chest tall</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Lat Pulldown <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×12 · Full stretch</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×12</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Face Pull + Pull-Apart <span class="xp-badge">+35 XP</span></div><div class="ex-detail">3 rounds · 15 / 20</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Core + Cooldown</div><div class="ph-time">70-90 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Dead Bug + Pallof + Hanging Leg Raise <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+35 XP</span></div><div class="ex-detail">3 rounds each</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">3 each</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Stairmaster <span class="xp-badge">+25 XP</span></div><div class="ex-detail">5 min · Moderate</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pigeon + 90/90 + Spinal Twist <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+25 XP</span></div><div class="ex-detail">Full decompression</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+    <div class="tip"><strong>💡 W7 Leg Strength</strong>Complete the full session = 825 XP + 💎5. Beat all 3 major targets = +500 bonus XP. Let's get it. 💪</div>
+  </div>
+
+  <div class="plan-panel" id="plan-legs-dynamic">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup + Power Prime</div><div class="ph-time">0-10 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Jump Rope</div><div class="ex-detail">4 min · CNS activation</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">4 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bird Dog + Hip CARs + Band Walk <span class="lb-b">🔶 Back Care</span></div><div class="ex-detail">Primer sequence</div><div class="ex-tags"><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">6 min</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>⚡</span><div class="ph-name">Power Block</div><div class="ph-time">10-30 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Box Jump — Higher</div><div class="ex-detail">4×6 · Step up height · Land soft</div><div class="ex-tags"><span class="tag t-pwr">Power</span></div></div><div class="ex-timer">4×6</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Goblet Squat Pause+Explode</div><div class="ex-detail">4×10 · 3-sec bottom pause</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Jump Lunge → Walking Lunge</div><div class="ex-detail">3 rounds · 8/10 each</div><div class="ex-tags"><span class="tag t-pwr">Power</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Strength</div><div class="ph-time">30-56 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Split Squat <span class="pr-f">📈 Beat 100</span></div><div class="ex-detail">4×10 each</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×10</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Single-Leg RDL</div><div class="ex-detail">3×10 each</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">3×10</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">KB Swing <span class="lb-b">🔶 Back Care</span></div><div class="ex-detail">4×15 · Hip hinge</div><div class="ex-tags"><span class="tag t-glute">Glutes</span></div></div><div class="ex-timer">4×15</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Core + Cooldown</div><div class="ph-time">56-90 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Dead Bug + Ab Wheel + Clamshell <span class="lb-b">🔶 Back Care</span></div><div class="ex-detail">3 each</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">3 each</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Assault Bike</div><div class="ex-detail">5 min flush</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Stretch Flow <span class="lb-b">🔶 Back Care</span></div><div class="ex-detail">Child's pose · Twist · Pigeon</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">8 min</div></div>
+    </div>
+  </div>
+
+  <div class="plan-panel" id="plan-upper-friday">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warmup</div><div class="ph-time">0-10 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Row Machine <span class="xp-badge">+15 XP</span></div><div class="ex-detail">5 min moderate</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">5 min</div></div>
+      <div class="ex" data-xp="15" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Band Pull-Aparts + CARs <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+15 XP</span></div><div class="ex-detail">2×20 pull-aparts · 10 circles</div><div class="ex-tags"><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">5 min</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🫸</span><div class="ph-name">Push</div><div class="ph-time">10-34 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bench Press <span class="pr-f">📈 255+×10</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">Last: 255×10 Medium · Push 265×10 or 275×8</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4 sets</div></div>
+      <div class="ex" data-xp="75" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline DB + Cable Fly <span class="xp-badge">+75 XP</span></div><div class="ex-detail">3 rounds · 10/12</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">DB Shoulder Press <span class="pr-f">📈 105s</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×10-12 · Last 100×12 · Push 105s</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×10-12</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Lateral + Tricep Pushdown <span class="xp-badge">+35 XP</span></div><div class="ex-detail">3 rounds · 15/15</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🫷</span><div class="ph-name">Pull</div><div class="ph-time">34-56 min</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pull-Up <span class="pr-f">📈 22+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">4×max · Last 20/20/20 · Push 22+ or add weight</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4×max</div></div>
+      <div class="ex" data-xp="100" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Row <span class="pr-f">📈 220+</span><span class="xp-badge">+100 XP</span></div><div class="ex-detail">3×12-15 · Last 210×16 · Today 220</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×12-15</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Face Pull <span class="xp-badge">+35 XP</span></div><div class="ex-detail">3×15</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×15</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hammer + Reverse Curl <span class="xp-badge">+35 XP</span></div><div class="ex-detail">3 rounds · 12/10</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">3×super</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Core + Finisher</div><div class="ph-time">56-90 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Renegade Row + Core <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+50 XP</span></div><div class="ex-detail">3×10 each · Hanging leg raise + dead bug + plank</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">15 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Stairmaster Intervals <span class="xp-badge">+25 XP</span></div><div class="ex-detail">8 min · 1:30/0:30×4</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div><div class="ex-timer">8 min</div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Chest Stretch + Spinal Twist <span class="lb-b">🔶 Back Care</span><span class="xp-badge">+25 XP</span></div><div class="ex-detail">Full cooldown</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">6 min</div></div>
+    </div>
+    <div class="tip"><strong>💡 W7 Friday Upper</strong>Bench 265+ · Shoulder 105s · Row 220+ · Pull-ups 22+. Full session = 810 XP + 💎5.</div>
+  </div>
+
+  <div class="plan-panel" id="plan-full-body">
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Full Body Day</div><div class="ph-time">0-90 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Warmup Flow</div><div class="ex-detail">Incline walk + mobility</div><div class="ex-tags"><span class="tag t-bk">Back Care</span></div></div><div class="ex-timer">10 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bench + Pull-Up Superset</div><div class="ex-detail">4 rounds · 8/8</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div><div class="ex-timer">4×super</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press + RDL Superset</div><div class="ex-detail">4 rounds · 12/10</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">4×super</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">DB Thruster + Renegade Row</div><div class="ex-detail">4 rounds · 10/8</div><div class="ex-tags"><span class="tag t-pwr">Power</span></div></div><div class="ex-timer">4×super</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Core + Cardio + Stretch</div><div class="ex-detail">Full finisher</div><div class="ex-tags"><span class="tag t-core">Core</span></div></div><div class="ex-timer">30 min</div></div>
+    </div>
+  </div>
+
+  <div class="plan-panel" id="plan-flush">
+    <div class="phase"><div class="ph-hdr"><span>🔄</span><div class="ph-name">Movement + Mobility</div><div class="ph-time">0-45 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Easy Bike + Mobility Flow</div><div class="ex-detail">8 min bike · Full mobility</div><div class="ex-tags"><span class="tag t-mob">Mobility</span></div></div><div class="ex-timer">20 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Light Full Body Circuit</div><div class="ex-detail">3 rounds · Goblet squat / row / hip thrust · 15 each</div><div class="ex-tags"><span class="tag t-legs">Legs</span></div></div><div class="ex-timer">15 min</div></div>
+    </div>
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Deep Stretch</div><div class="ph-time">45-90 min</div></div>
+      <div class="ex" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Full Stretch Flow <span class="lb-b">🔶 Back Care</span></div><div class="ex-detail">Pigeon · 90/90 · Child's pose · Cobra · Breathing</div><div class="ex-tags"><span class="tag t-flex">Flex</span></div></div><div class="ex-timer">25 min</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="screen" id="screen-log">
+  <div class="log-hero"><h2>LIFT LOGGER</h2><p>Log · Save · Track</p></div>
+
+  <div class="session-info" style="margin-top:16px;">
+    <div>
+      <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:4px;">Date</div>
+      <input type="date" id="log-date" style="background:var(--mid);border:1px solid #1a2040;border-radius:6px;color:var(--gold-l);font-size:.82rem;padding:6px 10px;outline:none;">
+    </div>
+    <div>
+      <div style="font-size:.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:4px;">Type</div>
+      <div class="si-type-wrap">
+        <button class="si-type active" onclick="setLogType(this,'LEG DAY')">Leg</button>
+        <button class="si-type" onclick="setLogType(this,'UPPER BODY')">Upper</button>
+        <button class="si-type" onclick="setLogType(this,'FULL BODY')">Full</button>
+        <button class="si-type" onclick="setLogType(this,'FLUSH')">Flush</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="prog-wrap" style="margin-top:14px;">
+    <div class="prog-lbl"><span>Sets Logged</span><span class="prog-pct" id="log-pct">0 sets</span></div>
+    <div class="prog-track"><div class="prog-fill" id="log-fill" style="background:linear-gradient(90deg,var(--gd),var(--green));"></div></div>
+  </div>
+
+  <div class="sec-l">💪 UPPER</div>
+
+  <div class="lift-card major" id="card-bench"><div class="lc-head" onclick="tc('bench')"><div class="lc-icon">🏋🏾</div><div class="lc-info"><div class="lc-name">Bench Press <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Beat last session</div></div><div><div class="lc-stat" id="stat-bench">NOT STARTED</div><div class="lc-best" id="best-bench"></div></div><div class="lc-chev" id="chev-bench">▼</div></div>
+    <div class="lc-body" id="body-bench"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-bench"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-bench"></div><button class="add-btn" onclick="addSet('bench')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-bench" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-pullup"><div class="lc-head" onclick="tc('pullup')"><div class="lc-icon">💪</div><div class="lc-info"><div class="lc-name">Pull-Up <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Dead hang</div></div><div><div class="lc-stat" id="stat-pullup">NOT STARTED</div><div class="lc-best" id="best-pullup"></div></div><div class="lc-chev" id="chev-pullup">▼</div></div>
+    <div class="lc-body" id="body-pullup"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-pullup"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-pullup"></div><button class="add-btn" onclick="addSet('pullup')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-pullup" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-row"><div class="lc-head" onclick="tc('row')"><div class="lc-icon">🫷</div><div class="lc-info"><div class="lc-name">Cable Row <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Wide grip</div></div><div><div class="lc-stat" id="stat-row">NOT STARTED</div><div class="lc-best" id="best-row"></div></div><div class="lc-chev" id="chev-row">▼</div></div>
+    <div class="lc-body" id="body-row"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-row"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-row"></div><button class="add-btn" onclick="addSet('row')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-row" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-shoulder"><div class="lc-head" onclick="tc('shoulder')"><div class="lc-icon">🏋🏾</div><div class="lc-info"><div class="lc-name">DB Shoulder <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Full lockout</div></div><div><div class="lc-stat" id="stat-shoulder">NOT STARTED</div><div class="lc-best" id="best-shoulder"></div></div><div class="lc-chev" id="chev-shoulder">▼</div></div>
+    <div class="lc-body" id="body-shoulder"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-shoulder"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-shoulder"></div><button class="add-btn" onclick="addSet('shoulder')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-shoulder" type="text"></div></div></div>
+
+  <div class="sec-l">🦵 LOWER</div>
+
+  <div class="lift-card major" id="card-legpress"><div class="lc-head" onclick="tc('legpress')"><div class="lc-icon">🦵</div><div class="lc-info"><div class="lc-name">Leg Press <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Full depth</div></div><div><div class="lc-stat" id="stat-legpress">NOT STARTED</div><div class="lc-best" id="best-legpress"></div></div><div class="lc-chev" id="chev-legpress">▼</div></div>
+    <div class="lc-body" id="body-legpress"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-legpress"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-legpress"></div><button class="add-btn" onclick="addSet('legpress')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-legpress" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-bss"><div class="lc-head" onclick="tc('bss')"><div class="lc-icon">🦵</div><div class="lc-info"><div class="lc-name">Split Squat <span class="maj-b">⭐ Major</span></div><div class="lc-sub">DBs in hand</div></div><div><div class="lc-stat" id="stat-bss">NOT STARTED</div><div class="lc-best" id="best-bss"></div></div><div class="lc-chev" id="chev-bss">▼</div></div>
+    <div class="lc-body" id="body-bss"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-bss"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-bss"></div><button class="add-btn" onclick="addSet('bss')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-bss" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-rdl"><div class="lc-head" onclick="tc('rdl')"><div class="lc-icon">🍑</div><div class="lc-info"><div class="lc-name">RDL <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Slow eccentric</div></div><div><div class="lc-stat" id="stat-rdl">NOT STARTED</div><div class="lc-best" id="best-rdl"></div></div><div class="lc-chev" id="chev-rdl">▼</div></div>
+    <div class="lc-body" id="body-rdl"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-rdl"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-rdl"></div><button class="add-btn" onclick="addSet('rdl')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-rdl" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-hipthrust"><div class="lc-head" onclick="tc('hipthrust')"><div class="lc-icon">🍑</div><div class="lc-info"><div class="lc-name">Hip Thrust <span class="maj-b">⭐ Major</span></div><div class="lc-sub">3-sec top hold</div></div><div><div class="lc-stat" id="stat-hipthrust">NOT STARTED</div><div class="lc-best" id="best-hipthrust"></div></div><div class="lc-chev" id="chev-hipthrust">▼</div></div>
+    <div class="lc-body" id="body-hipthrust"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-hipthrust"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-hipthrust"></div><button class="add-btn" onclick="addSet('hipthrust')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-hipthrust" type="text"></div></div></div>
+
+  <div class="lift-card major" id="card-squat"><div class="lc-head" onclick="tc('squat')"><div class="lc-icon">🏋🏾</div><div class="lc-info"><div class="lc-name">Back Squat <span class="maj-b">⭐ Major</span></div><div class="lc-sub">Drive through heels</div></div><div><div class="lc-stat" id="stat-squat">NOT STARTED</div><div class="lc-best" id="best-squat"></div></div><div class="lc-chev" id="chev-squat">▼</div></div>
+    <div class="lc-body" id="body-squat"><div class="ip-wrap"><div class="ip-t">📈 PREVIOUS</div><div id="ip-squat"></div></div><div class="sets-hdr"><div>SET</div><div>LBS</div><div>REPS</div><div>FEEL</div><div></div></div><div id="sets-squat"></div><button class="add-btn" onclick="addSet('squat')">+ ADD SET</button><div class="nr"><span class="nl">Notes</span><input class="ni" id="note-squat" type="text"></div></div></div>
+
+  <div class="sec-l">📝 NOTES</div>
+  <textarea id="session-notes" style="width:100%;background:#0a0c14;border:1px solid #1a2040;border-radius:8px;color:var(--white);font-size:.78rem;padding:11px 13px;min-height:80px;outline:none;margin-top:8px;" placeholder="Energy, PRs, back check-in..."></textarea>
+
+  <div class="save-bar">
+    <div class="save-info"><span id="log-count">0</span> sets logged</div>
+    <span class="sf" id="saved-flash">✔ Saved!</span>
+    <button class="btn btn-cl" onclick="clearLog()">CLEAR</button>
+    <button class="btn btn-sv" onclick="saveSession()">SAVE</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-hist">
+  <div class="hist-hero"><h2>LIFT HISTORY</h2><p>Every session · Every lift</p></div>
+  <div class="filter-bar">
+    <div class="filter-label">Filter</div>
+    <button class="f-btn active" onclick="filt('all',this)">ALL</button>
+    <button class="f-btn" onclick="filt('bench',this)">Bench</button>
+    <button class="f-btn" onclick="filt('pullup',this)">Pull-Up</button>
+    <button class="f-btn" onclick="filt('row',this)">Row</button>
+    <button class="f-btn" onclick="filt('shoulder',this)">Shoulder</button>
+    <button class="f-btn" onclick="filt('legpress',this)">Leg Press</button>
+    <button class="f-btn" onclick="filt('bss',this)">Split Squat</button>
+    <button class="f-btn" onclick="filt('rdl',this)">RDL</button>
+    <button class="f-btn" onclick="filt('hipthrust',this)">Hip Thrust</button>
+    <button class="f-btn" onclick="filt('squat',this)">Squat</button>
+  </div>
+  <div id="hist-content"></div>
+
+  <div class="bk-box">
+    <div class="bk-box-ttl">💾 BACKUP TO NOTES</div>
+    <div class="bk-box-dsc">After each session: tap COPY → paste into Notes app. Send that text to Claude in chat and they will embed it permanently into the next version of the app.</div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-sv" onclick="doCopyBackup()" style="flex:1;" id="copy-btn">📋 COPY BACKUP</button>
+      <button class="btn btn-sv" onclick="doShareBackup()" style="flex:1;background:var(--blue-l);" id="share-btn">📤 SHARE</button>
+    </div>
+    <textarea id="backup-ta" style="width:100%;height:0;overflow:hidden;background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--gold-l);font-size:.75rem;padding:0;margin-top:0;opacity:0;transition:all .3s ease;-webkit-user-select:text;user-select:text;"></textarea>
+    <div id="bk-msg" style="font-size:.8rem;margin-top:8px;display:none;text-align:center;padding:8px;border-radius:6px;"></div>
+  </div>
+
+  <button class="ch-btn" onclick="clearHist()">🗑 CLEAR SAVED SESSIONS</button>
+</div>
+
+<div class="screen" id="screen-prog">
+  <div class="prog-hero"><h2>PROGRESS</h2><p>Strength gains · Week over week</p></div>
+  <div id="prog-content"></div>
+
+  <!-- LEVEL LADDER -->
+  <div class="level-ladder">
+    <div class="level-ladder-ttl">🏆 THE WA$H LADDER</div>
+    <div class="ladder-row" id="ladder-1"><div class="ladder-num">LVL 1</div><div class="ladder-name">ROOKIE</div><div class="ladder-xp">0 XP</div></div>
+    <div class="ladder-row" id="ladder-2"><div class="ladder-num">LVL 2</div><div class="ladder-name">GETTING PROLIFIC</div><div class="ladder-xp">1,000 XP</div></div>
+    <div class="ladder-row" id="ladder-3"><div class="ladder-num">LVL 3</div><div class="ladder-name">CERTIFIED DOG</div><div class="ladder-xp">2,500 XP</div></div>
+    <div class="ladder-row" id="ladder-4"><div class="ladder-num">LVL 4</div><div class="ladder-name">MR. WASHINGTON</div><div class="ladder-xp">5,000 XP</div></div>
+    <div class="ladder-row" id="ladder-5"><div class="ladder-num">LVL 5</div><div class="ladder-name">THE PROLIFIC WAY</div><div class="ladder-xp">8,500 XP</div></div>
+    <div class="ladder-row" id="ladder-6"><div class="ladder-num">LVL 6</div><div class="ladder-name">GENERATIONAL WEALTH</div><div class="ladder-xp">13,000 XP</div></div>
+  </div>
+</div>
+
+<!-- LEVEL UP MODAL -->
+<div class="level-up-banner" id="levelup-modal">
+  <div class="level-up-box">
+    <div class="level-up-eyebrow">LEVEL UP</div>
+    <div class="level-up-title" id="lu-title">LVL 2</div>
+    <div class="level-up-emoji" id="lu-emoji">💪</div>
+    <div class="level-up-name" id="lu-name">GETTING PROLIFIC</div>
+    <div class="level-up-msg" id="lu-msg">You're building something real, Mr. Washington. Keep stacking.</div>
+    <button class="level-up-btn" onclick="closeLevelUp()">LET'S GET IT</button>
+  </div>
+</div>
+
+<footer>Wa$h Fitness Tracker · <span>Mr. Washington — build, don't maintain. 📈</span></footer>
+
+<script>
+// Aggressive error suppression — Safari fires harmless cross-origin "Script error" warnings
+window.onerror = function(){ return true; };
+window.addEventListener('error', function(e){ if(e&&e.preventDefault)e.preventDefault(); if(e&&e.stopPropagation)e.stopPropagation(); return true; }, true);
+window.addEventListener('unhandledrejection', function(e){ if(e&&e.preventDefault)e.preventDefault(); return true; });
+
+var LIFTS=['bench','pullup','row','shoulder','legpress','bss','rdl','hipthrust','squat'];
+var LNAMES={bench:'Bench Press',pullup:'Pull-Up',row:'Cable Row',shoulder:'DB Shoulder Press',legpress:'Leg Press',bss:'Split Squat',rdl:'RDL',hipthrust:'Hip Thrust',squat:'Back Squat'};
+var DSETS={bench:4,pullup:4,row:3,shoulder:3,legpress:4,bss:4,rdl:4,hipthrust:3,squat:4};
+var SK='prolific_master_v2';
+var SK_D='prolific_live_v2';
+var SK_XP='wash_xp_v1';
+
+// Storage helpers — defined FIRST so early init can use them
+function S(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function L(k){try{var r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}}
+
+// ═══════ HARDCODED XP BASELINE (persists through iOS wipes) ═══════
+// This is your earned XP from completed sessions, baked into the file forever.
+// Updated after each session by Claude.
+var HARDCODED_XP = 3490;      // Apr 20 (660) + Apr 21 (980) + Apr 27 (750) + Apr 28 (600) + May 5 lower focus (500)
+var HARDCODED_DIAMONDS = 25;  // 5 completed sessions x 5 diamonds each
+
+// Early init: ensure XP floor is written to localStorage before any UI renders
+try{
+  var _earlyXP=L(SK_XP)||{xp:0,diamonds:0,level:1};
+  if(typeof _earlyXP.xp!=='number')_earlyXP.xp=0;
+  if(typeof _earlyXP.diamonds!=='number')_earlyXP.diamonds=0;
+  if(_earlyXP.xp<HARDCODED_XP)_earlyXP.xp=HARDCODED_XP;
+  if(_earlyXP.diamonds<HARDCODED_DIAMONDS)_earlyXP.diamonds=HARDCODED_DIAMONDS;
+  S(SK_XP,_earlyXP);
+}catch(e){}
+// ═══════ END HARDCODED XP BASELINE ═══════
+
+// ═══════ LEVEL SYSTEM ═══════
+var LEVELS=[
+  {lvl:1, name:'ROOKIE',              xp:0,     emoji:'🏋🏾', msg:'Everyone starts here. The work begins now, Mr. Washington.'},
+  {lvl:2, name:'GETTING PROLIFIC',    xp:1000,  emoji:'💪', msg:"You're building something real, Mr. Washington. Keep stacking."},
+  {lvl:3, name:'CERTIFIED DOG',       xp:2500,  emoji:'🔥', msg:'The consistency is paying off. You put in the work and it shows.'},
+  {lvl:4, name:'MR. WASHINGTON',      xp:5000,  emoji:'⭐', msg:'Your name means something now. Keep earning it.'},
+  {lvl:5, name:'THE PROLIFIC WAY',    xp:8500,  emoji:'👑', msg:"You don't just train — you operate at a different level. Elite."},
+  {lvl:6, name:'GENERATIONAL WEALTH', xp:13000, emoji:'💰', msg:'The habits you built in the gym translate to every part of your life. Legacy.'}
+];
+// ═══════ END LEVEL SYSTEM ═══════
+
+var HARDCODED_SESSIONS=[
+{id:'sess_tue_may5_2026_fullbody_lower',date:'Tue, May 5, 2026',type:'FULL BODY · LOWER FOCUS',lifts:{bench:{sets:[],note:''},pullup:{sets:[],note:''},row:{sets:[],note:''},shoulder:{sets:[],note:''},legpress:{sets:[],note:'Skipped'},bss:{sets:[{w:'70',r:'10',f:'Easy',done:true},{w:'90',r:'10',f:'Easy',done:true},{w:'90',r:'10',f:'Medium',done:true},{w:'90',r:'10',f:'Medium',done:true}],note:'SL KB Bulgarian squat'},rdl:{sets:[{w:'90',r:'8',f:'Easy',done:true},{w:'90',r:'8',f:'Easy',done:true},{w:'90',r:'8',f:'Medium',done:true}],note:'SL KB RDL'},hipthrust:{sets:[],note:'Skipped'},squat:{sets:[{w:'95',r:'10',f:'Easy',done:true},{w:'135',r:'10',f:'Easy',done:true},{w:'155',r:'10',f:'Medium',done:true},{w:'175',r:'10',f:'Medium',done:true}],note:'Barbell Front squat'}},notes:'Tue W10 Full Body Lower Focus. 12 sets logged. Added exercises: Incline treadmill run forward/backward 20sec each x3 | Calf Raises 3x20. Skipped Leg Press & Hip Thrust. BB Front squat topped 175x10 Medium. SL KB work for BSS and RDL.'},
+{id:'sess_tue_apr28_2026_fullbody_upper',date:'Tue, Apr 28, 2026',type:'FULL BODY · UPPER FOCUS',lifts:{bench:{sets:[{w:'185',r:'15',f:'Easy',done:true},{w:'245',r:'8',f:'Easy',done:true},{w:'275',r:'8',f:'Medium',done:true},{w:'315',r:'4',f:'Hard',done:true}],note:'Superset with adduction/abduction machine 3x2... [pending clarification]'},pullup:{sets:[],note:''},row:{sets:[{w:'180',r:'12',f:'Easy',done:true},{w:'180',r:'12',f:'Easy',done:true},{w:'200',r:'10',f:'Medium',done:true}],note:'Machine pull down row w/ 2-sec squeeze at the bottom... [pending clarification]'},shoulder:{sets:[{w:'45',r:'15',f:'Easy',done:true},{w:'45',r:'15',f:'Easy',done:true},{w:'50',r:'12',f:'Easy',done:true}],note:'DB press 45/50lbs each arm | superset with machine... [pending clarification]'},legpress:{sets:[],note:''},bss:{sets:[],note:''},rdl:{sets:[],note:''},hipthrust:{sets:[],note:''},squat:{sets:[{w:'270',r:'10',f:'Easy',done:true},{w:'270',r:'10',f:'Easy',done:true},{w:'290',r:'10',f:'Medium',done:true}],note:'Did machine hacksaw squat instead'}},notes:'Tue W9 Full Body Upper Focus. Energy felt good. Warmup: 5min treadmill walk 9 incline 3mph + 5min steady jog no incline 6mph. 14 sets across 4 lifts. Bench hit 315x4 Hard - matched all-time top end! Skipped Pull-Up, RDL, Hip Thrust (focus shifted to upper compound + squat day).'},
+{id:'sess_mon_apr27_2026_fullbody',date:'Mon, Apr 27, 2026',type:'FULL BODY',lifts:{bench:{sets:[],note:''},pullup:{sets:[],note:''},row:{sets:[],note:''},shoulder:{sets:[{w:'180',r:'20',f:'Easy',done:true},{w:'230',r:'15',f:'Medium',done:true},{w:'230',r:'20',f:'Hard',done:true}],note:'Machine shoulder press — new top weight 230x20 Hard'},legpress:{sets:[{w:'70',r:'10',f:'Easy',done:true},{w:'70',r:'10',f:'Medium',done:true},{w:'90',r:'10',f:'Medium',done:true},{w:'90',r:'10',f:'Hard',done:true}],note:'Did DB squat to press instead, heels elevated'},bss:{sets:[{w:'35',r:'8',f:'Easy',done:true},{w:'45',r:'8',f:'Medium',done:true},{w:'45',r:'8',f:'Medium',done:true}],note:'Did SL KB step back lunge w/ KB push instead'},rdl:{sets:[{w:'35',r:'10',f:'Easy',done:true},{w:'35',r:'10',f:'Easy',done:true},{w:'45',r:'10',f:'Easy',done:true}],note:'SL KB RDL 3x10, superset with 3x10 SL side lunge'},hipthrust:{sets:[{w:'45',r:'10',f:'Medium',done:true},{w:'45',r:'10',f:'Medium',done:true},{w:'45',r:'8',f:'Medium',done:true}],note:'Did SL KB thrust 3-sec hold at top instead'},squat:{sets:[],note:''}},notes:'Mon W9 Full Body. Started with steady jog (no incline, 7mph). Lots of alternative single-leg KB & DB work tonight. Machine shoulder press hit 230x20 Hard. Cardio: 20sec sprint/40sec jog x8 treadmill. Abs: Paloff press w/ medball 3x12 ea | Single Arm KB crunch on BOSU 2x12 ea | Side crunch on BOSU 2x20 ea.'},
+{id:'sess_tue_apr21_2026_dynamic_upper',date:'Tue, Apr 21, 2026',type:'UPPER BODY',lifts:{bench:{sets:[],note:''},pullup:{sets:[],note:''},row:{sets:[{w:'110',r:'12',f:'Easy',done:true},{w:'130',r:'12',f:'Easy',done:true},{w:'140',r:'12',f:'Medium',done:true}],note:'Machine single arm'},shoulder:{sets:[],note:''},legpress:{sets:[],note:''},bss:{sets:[],note:''},rdl:{sets:[{w:'35',r:'6',f:'Easy',done:true},{w:'35',r:'6',f:'Easy',done:true},{w:'35',r:'6',f:'Easy',done:true},{w:'0',r:'0',f:'N/a',done:true}],note:'Used KB on top of BOSU ball, superset with goblet'},hipthrust:{sets:[],note:''},squat:{sets:[],note:''}},notes:'Tuesday Dynamic Upper + Legs. BB circuit 3x3 each: RDL, high raise, power clean, front squat, overhead press. Superset w/ KB hip rotations 3x3. Cardio: 20sec sprint / 40sec jog x8 on treadmill. Abs: Paloff press w/ medball 3x12 each side | Single Arm KB crunch on BOSU 2x12 ea | Side crunch on BOSU 2x20 ea.'},
+{id:'sess_mon_apr20_2026_latenight_legs',date:'Mon, Apr 20, 2026',type:'LEG DAY',lifts:{bench:{sets:[],note:''},pullup:{sets:[],note:''},row:{sets:[],note:''},shoulder:{sets:[],note:''},legpress:{sets:[{w:'360',r:'12',f:'Easy',done:true},{w:'450',r:'12',f:'Medium',done:true},{w:'450',r:'12',f:'Medium',done:true},{w:'500',r:'10',f:'Medium',done:true}],note:'HUGE PR — target was 420, hit 500x10 Medium'},bss:{sets:[{w:'135',r:'10',f:'Easy',done:true},{w:'145',r:'10',f:'Easy',done:true},{w:'155',r:'10',f:'Medium',done:true}],note:'Barbell 3x10 each leg — went heavier than DB plan called for'},rdl:{sets:[],note:''},hipthrust:{sets:[],note:''},squat:{sets:[],note:''}},notes:'Monday late night heavy legs. Started with 10min stairmaster warmup. MASSIVE leg press PR (500x10). BB split squats up to 155. Completed full core + cooldown flow. Back held up great with extra warmup + back-safe core work.'},
+{id:'sess_fri_apr17_2026_upper',date:'Fri, Apr 17, 2026',type:'UPPER BODY',lifts:{bench:{sets:[{w:'185',r:'12',f:'Easy',done:true},{w:'225',r:'10',f:'Medium',done:true},{w:'245',r:'10',f:'Medium',done:true},{w:'255',r:'10',f:'Medium',done:true}],note:''},pullup:{sets:[{w:'0',r:'20',f:'Easy',done:true},{w:'0',r:'20',f:'Easy',done:true},{w:'0',r:'20',f:'Easy',done:true}],note:''},row:{sets:[{w:'45',r:'12',f:'Easy',done:true},{w:'70',r:'12',f:'Easy',done:true},{w:'75',r:'15',f:'Medium',done:true}],note:'Did lever row (3sec pause top) - superset w/ 21 curls (7,7,7)'},shoulder:{sets:[],note:''},legpress:{sets:[],note:''},bss:{sets:[],note:''},rdl:{sets:[],note:''},hipthrust:{sets:[],note:''},squat:{sets:[],note:''}},notes:'Friday W7 upper.'},
+{id:'sess_mon_apr13_2026_legs',date:'Mon, Apr 13, 2026',type:'LEG DAY',lifts:{bench:{sets:[],note:''},pullup:{sets:[],note:''},row:{sets:[{w:'140',r:'15',f:'Easy',done:true},{w:'180',r:'15',f:'Easy',done:true},{w:'210',r:'16',f:'Medium',done:true}],note:'Seated cable row pulldowns'},shoulder:{sets:[{w:'80',r:'15',f:'Easy',done:true},{w:'80',r:'15',f:'Easy',done:true},{w:'100',r:'12',f:'Medium',done:true}],note:''},legpress:{sets:[{w:'270',r:'12',f:'Easy',done:true},{w:'320',r:'12',f:'Easy',done:true},{w:'360',r:'12',f:'Medium',done:true},{w:'410',r:'12',f:'Medium',done:true}],note:'Supersetted with calf raises 3x20'},bss:{sets:[{w:'80',r:'10',f:'Easy',done:true},{w:'80',r:'10',f:'Easy',done:true},{w:'100',r:'10',f:'Medium',done:true},{w:'100',r:'10',f:'Medium',done:true}],note:''},rdl:{sets:[{w:'90',r:'15',f:'Easy',done:true},{w:'90',r:'15',f:'Easy',done:true},{w:'90',r:'15',f:'Easy',done:true}],note:'KB RDL 3x15'},hipthrust:{sets:[{w:'225',r:'12',f:'Easy',done:true},{w:'245',r:'12',f:'Medium',done:true},{w:'265',r:'13',f:'Medium',done:true}],note:''},squat:{sets:[],note:''}},notes:'Monday W7 legs.'},
+{id:'sess_fri_apr10_2026_bench',date:'Fri, Apr 10, 2026',type:'UPPER BODY',lifts:{bench:{sets:[{w:'185',r:'15',f:'Easy',done:true},{w:'245',r:'8',f:'Easy',done:true},{w:'265',r:'6',f:'Medium',done:true},{w:'275',r:'6',f:'Medium',done:true},{w:'315',r:'4',f:'Hard',done:true}],note:'Good session. Top 315x4.'},pullup:{sets:[],note:''},row:{sets:[],note:''},shoulder:{sets:[],note:''},legpress:{sets:[],note:''},bss:{sets:[],note:''},rdl:{sets:[],note:''},hipthrust:{sets:[],note:''},squat:{sets:[],note:''}},notes:'Friday W6 upper.'}
+];
+
+var ctrs={};for(var i=0;i<LIFTS.length;i++)ctrs[LIFTS[i]]=0;
+var logType='LEG DAY';
+var histFilt='all';
+var autoT=null;
+var currentPlan='tue-may5-fullbody-lower';
+var _currentSessId=null;
+
+// S() and L() defined earlier (before HARDCODED_XP init)
+function D(k){try{localStorage.removeItem(k);}catch(e){}}
+
+function getAllSessions(){
+  var saved=L(SK)||{sessions:[]};
+  var savedSessions=saved.sessions||[];
+  var combined=[].concat(HARDCODED_SESSIONS);
+  for(var i=0;i<savedSessions.length;i++){
+    var found=false;
+    for(var j=0;j<HARDCODED_SESSIONS.length;j++){
+      if(HARDCODED_SESSIONS[j].id===savedSessions[i].id){found=true;break;}
+    }
+    if(!found)combined.push(savedSessions[i]);
+  }
+  combined.sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+  return combined;
+}
+
+function goTo(id){
+  var screens=document.querySelectorAll('.screen');
+  for(var i=0;i<screens.length;i++)screens[i].classList.remove('active');
+  var btns=document.querySelectorAll('.nav-btn');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('active');
+  var scr=document.getElementById('screen-'+id);
+  var btn=document.getElementById('nb-'+id);
+  if(scr)scr.classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='hist')renderHist();
+  if(id==='prog')renderProg();
+  if(id==='log')renderPrevs();
+}
+
+function setPlan(id,el){
+  var pills=document.querySelectorAll('.plan-pill');
+  for(var i=0;i<pills.length;i++)pills[i].classList.remove('active');
+  if(el)el.classList.add('active');
+  var panels=document.querySelectorAll('.plan-panel');
+  for(var i=0;i<panels.length;i++)panels[i].classList.remove('active');
+  var panel=document.getElementById('plan-'+id);
+  if(panel)panel.classList.add('active');
+  currentPlan=id;
+  recountToday();
+}
+
+function setType(btn){
+  var btns=document.querySelectorAll('#screen-today .si-type');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('active');
+  btn.classList.add('active');
+}
+
+function setLogType(btn,type){
+  var btns=document.querySelectorAll('#screen-log .si-type');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('active');
+  btn.classList.add('active');
+  logType=type;
+}
+
+function tx(el){
+  var wasdone=el.classList.contains('done');
+  el.classList.toggle('done');
+  recountToday();
+  // XP logic
+  var xp=parseInt(el.getAttribute('data-xp'))||0;
+  if(xp>0){
+    if(!wasdone){
+      // Just completed
+      addXP(xp,el);
+      checkSessionBonus();
+    }else{
+      // Uncompleted - deduct
+      addXP(-xp,null);
+    }
+  }
+}
+
+// ═══════ XP / LEVEL ENGINE ═══════
+function loadXP(){
+  var data=L(SK_XP)||{xp:0,diamonds:0,level:1};
+  if(typeof data.xp!=='number')data.xp=0;
+  if(typeof data.diamonds!=='number')data.diamonds=0;
+  // Hardcoded XP is the floor — never drop below what's been earned and embedded
+  var changed=false;
+  if(data.xp<HARDCODED_XP){data.xp=HARDCODED_XP;changed=true;}
+  if(data.diamonds<HARDCODED_DIAMONDS){data.diamonds=HARDCODED_DIAMONDS;changed=true;}
+  // Persist floor values so UI always reflects them
+  if(changed)S(SK_XP,data);
+  return data;
+}
+function saveXP(data){S(SK_XP,data);}
+
+function getCurrentLevel(xp){
+  var cur=LEVELS[0];
+  for(var i=0;i<LEVELS.length;i++){
+    if(xp>=LEVELS[i].xp)cur=LEVELS[i];
+  }
+  return cur;
+}
+function getNextLevel(xp){
+  for(var i=0;i<LEVELS.length;i++){
+    if(xp<LEVELS[i].xp)return LEVELS[i];
+  }
+  return null; // maxed
+}
+
+function addXP(amount,sourceEl){
+  var data=loadXP();
+  var oldLevel=getCurrentLevel(data.xp).lvl;
+  data.xp=Math.max(0,data.xp+amount);
+  var newLevel=getCurrentLevel(data.xp).lvl;
+  saveXP(data);
+  updateXPUI();
+  if(amount>0&&sourceEl){
+    showXPFloat(sourceEl,amount,false);
+  }
+  if(newLevel>oldLevel){
+    showLevelUp(newLevel);
+  }
+}
+
+function addDiamonds(amount,sourceEl){
+  var data=loadXP();
+  data.diamonds=Math.max(0,data.diamonds+amount);
+  saveXP(data);
+  updateXPUI();
+  if(amount>0&&sourceEl){
+    showXPFloat(sourceEl,amount,true);
+  }
+}
+
+function updateXPUI(){
+  var data=loadXP();
+  var cur=getCurrentLevel(data.xp);
+  var next=getNextLevel(data.xp);
+  var lvlNum=document.getElementById('xp-lvl-num');
+  var lvlName=document.getElementById('xp-lvl-name');
+  var diamonds=document.getElementById('xp-diamonds');
+  var currentXP=document.getElementById('xp-current');
+  var nextXP=document.getElementById('xp-next');
+  var toGo=document.getElementById('xp-to-go');
+  var fill=document.getElementById('xp-bar-fill');
+  if(lvlNum)lvlNum.textContent='LVL '+cur.lvl;
+  if(lvlName)lvlName.textContent=cur.name;
+  if(diamonds)diamonds.textContent=data.diamonds;
+  if(currentXP)currentXP.textContent=data.xp.toLocaleString();
+  if(next){
+    if(nextXP)nextXP.textContent=next.xp.toLocaleString();
+    if(toGo)toGo.textContent=(next.xp-data.xp).toLocaleString()+' to '+next.name;
+    var pct=((data.xp-cur.xp)/(next.xp-cur.xp))*100;
+    if(fill)fill.style.width=Math.min(100,Math.max(0,pct))+'%';
+  }else{
+    if(nextXP)nextXP.textContent='MAX';
+    if(toGo)toGo.textContent='👑 MAXED OUT';
+    if(fill)fill.style.width='100%';
+  }
+  // Update ladder
+  for(var i=1;i<=6;i++){
+    var row=document.getElementById('ladder-'+i);
+    if(!row)continue;
+    row.classList.remove('current','achieved');
+    if(i===cur.lvl)row.classList.add('current');
+    else if(i<cur.lvl)row.classList.add('achieved');
+  }
+}
+
+function showXPFloat(el,amount,isDiamond){
+  try{
+    var rect=el.getBoundingClientRect();
+    var f=document.createElement('div');
+    f.className='xp-float'+(isDiamond?' diamond':'');
+    f.textContent=(isDiamond?'💎 +':'+')+amount+(isDiamond?'':' XP');
+    f.style.left=(rect.right-80)+'px';
+    f.style.top=(rect.top+10)+'px';
+    document.body.appendChild(f);
+    setTimeout(function(){if(f.parentNode)f.parentNode.removeChild(f);},1500);
+  }catch(e){}
+}
+
+function showLevelUp(newLvl){
+  var lvl=LEVELS[newLvl-1];
+  if(!lvl)return;
+  var modal=document.getElementById('levelup-modal');
+  var title=document.getElementById('lu-title');
+  var emoji=document.getElementById('lu-emoji');
+  var name=document.getElementById('lu-name');
+  var msg=document.getElementById('lu-msg');
+  if(title)title.textContent='LVL '+lvl.lvl;
+  if(emoji)emoji.textContent=lvl.emoji;
+  if(name)name.textContent=lvl.name;
+  if(msg)msg.textContent=lvl.msg;
+  if(modal)modal.classList.add('show');
+}
+function closeLevelUp(){
+  var m=document.getElementById('levelup-modal');
+  if(m)m.classList.remove('show');
+}
+
+function checkSessionBonus(){
+  // If ALL exercises in current plan are done, award +💎5 bonus
+  var panel=document.getElementById('plan-'+currentPlan);
+  if(!panel)return;
+  var exs=panel.querySelectorAll('.ex');
+  if(!exs.length)return;
+  var allDone=true;
+  for(var i=0;i<exs.length;i++){
+    if(!exs[i].classList.contains('done')){allDone=false;break;}
+  }
+  if(allDone){
+    var data=loadXP();
+    var today=new Date().toDateString();
+    if(data.lastSessionBonus!==today+'_'+currentPlan){
+      data.lastSessionBonus=today+'_'+currentPlan;
+      saveXP(data);
+      addDiamonds(5,exs[exs.length-1]);
+    }
+  }
+}
+// ═══════ END XP ENGINE ═══════
+
+function recountToday(){
+  var panel=document.getElementById('plan-'+currentPlan);
+  if(!panel)return;
+  var exs=panel.querySelectorAll('.ex');
+  var total=exs.length;
+  var done=0;
+  for(var i=0;i<exs.length;i++)if(exs[i].classList.contains('done'))done++;
+  var pct=total>0?Math.round(done/total*100):0;
+  var fill=document.getElementById('today-fill');
+  var pctEl=document.getElementById('today-pct');
+  if(fill)fill.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=pct+'% Complete';
+}
+
+function tc(lift){
+  var body=document.getElementById('body-'+lift);
+  var chev=document.getElementById('chev-'+lift);
+  if(body)body.classList.toggle('open');
+  if(chev)chev.classList.toggle('open');
+}
+
+function addSet(lift,upd){
+  if(upd===undefined)upd=true;
+  ctrs[lift]++;
+  var n=ctrs[lift];
+  var c=document.getElementById('sets-'+lift);
+  if(!c)return;
+  var row=document.createElement('div');
+  row.className='set-row';
+  row.innerHTML='<div class="set-num">S'+n+'</div><input class="si" type="number" min="0" placeholder="lbs" id="w-'+lift+'-'+n+'" oninput="oi(\''+lift+'\','+n+')"><input class="si" type="number" min="0" placeholder="reps" id="r-'+lift+'-'+n+'" oninput="oi(\''+lift+'\','+n+')"><input class="fi" type="text" placeholder="easy/hard" id="f-'+lift+'-'+n+'" oninput="autoSave()"><div class="sc" id="c-'+lift+'-'+n+'" onclick="tsc(\''+lift+'\','+n+')">✓</div>';
+  c.appendChild(row);
+  if(upd){updStat(lift);updLogProg();}
+}
+
+function oi(lift,n){
+  var w=document.getElementById('w-'+lift+'-'+n);
+  var r=document.getElementById('r-'+lift+'-'+n);
+  if(w){if(w.value)w.classList.add('filled');else w.classList.remove('filled');}
+  if(r){if(r.value)r.classList.add('filled');else r.classList.remove('filled');}
+  updStat(lift);updLogProg();autoSave();
+}
+
+function tsc(lift,n){
+  var el=document.getElementById('c-'+lift+'-'+n);
+  if(el)el.classList.toggle('done');
+  updStat(lift);updLogProg();autoSave();
+}
+
+function updStat(lift){
+  var done=0;
+  for(var i=1;i<=ctrs[lift];i++){
+    var w=document.getElementById('w-'+lift+'-'+i);
+    var r=document.getElementById('r-'+lift+'-'+i);
+    if(w&&r&&w.value&&r.value)done++;
+  }
+  var stat=document.getElementById('stat-'+lift);
+  var card=document.getElementById('card-'+lift);
+  if(!stat||!card)return;
+  if(done===0){stat.textContent='NOT STARTED';stat.style.color='var(--muted)';card.classList.remove('logged');}
+  else if(done<ctrs[lift]){stat.textContent=done+'/'+ctrs[lift]+' SETS';stat.style.color='var(--gold)';card.classList.remove('logged');}
+  else{stat.textContent='✔ LOGGED';stat.style.color='var(--green)';card.classList.add('logged');}
+}
+
+function updLogProg(){
+  var tot=0,done=0;
+  for(var l=0;l<LIFTS.length;l++){
+    for(var i=1;i<=ctrs[LIFTS[l]];i++){
+      tot++;
+      var w=document.getElementById('w-'+LIFTS[l]+'-'+i);
+      var r=document.getElementById('r-'+LIFTS[l]+'-'+i);
+      if(w&&r&&w.value&&r.value)done++;
+    }
+  }
+  var pct=tot>0?Math.round(done/tot*100):0;
+  var fill=document.getElementById('log-fill');
+  var pctEl=document.getElementById('log-pct');
+  var cnt=document.getElementById('log-count');
+  if(fill)fill.style.width=pct+'%';
+  if(pctEl)pctEl.textContent=done+' / '+tot+' sets';
+  if(cnt)cnt.textContent=done;
+}
+
+function autoSave(){clearTimeout(autoT);autoT=setTimeout(writeDraft,600);}
+
+function writeDraft(){
+  try{
+    var sn=document.getElementById('session-notes');
+    var draft={sessId:_currentSessId,logType:logType,ctrs:{},notes:sn?sn.value:'',lifts:{}};
+    for(var l=0;l<LIFTS.length;l++)draft.ctrs[LIFTS[l]]=ctrs[LIFTS[l]];
+    for(var l=0;l<LIFTS.length;l++){
+      var lift=LIFTS[l];
+      var sets=[];
+      for(var i=1;i<=ctrs[lift];i++){
+        var w=document.getElementById('w-'+lift+'-'+i);
+        var r=document.getElementById('r-'+lift+'-'+i);
+        var f=document.getElementById('f-'+lift+'-'+i);
+        var c=document.getElementById('c-'+lift+'-'+i);
+        sets.push({w:w?w.value:'',r:r?r.value:'',f:f?f.value:'',done:c?c.classList.contains('done'):false});
+      }
+      var n=document.getElementById('note-'+lift);
+      draft.lifts[lift]={sets:sets,note:n?n.value:''};
+    }
+    S(SK_D,draft);
+  }catch(e){}
+}
+
+function saveSession(){
+  var dv=document.getElementById('log-date');
+  var dateVal=dv?dv.value:'';
+  var d=dateVal?new Date(dateVal+'T12:00:00'):new Date();
+  var dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+  var lifts={};var hasData=false;
+  for(var l=0;l<LIFTS.length;l++){
+    var lift=LIFTS[l];
+    var sets=[];
+    for(var i=1;i<=ctrs[lift];i++){
+      var w=document.getElementById('w-'+lift+'-'+i);
+      var r=document.getElementById('r-'+lift+'-'+i);
+      var f=document.getElementById('f-'+lift+'-'+i);
+      var c=document.getElementById('c-'+lift+'-'+i);
+      var ws=w?w.value:'';var rs=r?r.value:'';
+      sets.push({w:ws,r:rs,f:f?f.value:'',done:c?c.classList.contains('done'):false});
+      if(ws||rs)hasData=true;
+    }
+    var n=document.getElementById('note-'+lift);
+    lifts[lift]={sets:sets,note:n?n.value:''};
+  }
+  if(!hasData){alert('Log at least one set before saving.');return;}
+
+  var saved=L(SK)||{sessions:[]};
+  if(!saved.sessions)saved.sessions=[];
+  var sn=document.getElementById('session-notes');
+  var sessObj={id:_currentSessId||('sess_'+Date.now()),date:dateStr,type:logType,lifts:lifts,notes:sn?sn.value:''};
+  if(_currentSessId){
+    var idx=-1;
+    for(var i=0;i<saved.sessions.length;i++)if(saved.sessions[i].id===_currentSessId){idx=i;break;}
+    if(idx>-1)saved.sessions[idx]=sessObj;else saved.sessions.unshift(sessObj);
+  }else{
+    _currentSessId=sessObj.id;
+    saved.sessions.unshift(sessObj);
+  }
+  S(SK,saved);writeDraft();
+  var fl=document.getElementById('saved-flash');
+  if(fl){fl.classList.add('show');setTimeout(function(){fl.classList.remove('show');},3000);}
+  renderPrevs();
+  alert('✔ Session saved!\n\nIMPORTANT: Go to HISTORY tab → COPY BACKUP → paste in Notes → send to Claude so they can embed it permanently.');
+}
+
+function restoreDraft(){
+  try{
+    var draft=L(SK_D);
+    if(!draft)return;
+    if(draft.sessId)_currentSessId=draft.sessId;
+    if(draft.logType){
+      logType=draft.logType;
+      var btns=document.querySelectorAll('#screen-log .si-type');
+      for(var i=0;i<btns.length;i++){
+        if(btns[i].textContent.trim().toUpperCase().indexOf(draft.logType)!==-1)btns[i].classList.add('active');
+        else btns[i].classList.remove('active');
+      }
+    }
+    for(var l=0;l<LIFTS.length;l++){
+      var lift=LIFTS[l];
+      if(!draft.lifts||!draft.lifts[lift])continue;
+      var savedSets=draft.lifts[lift].sets||[];
+      while(ctrs[lift]<savedSets.length)addSet(lift,false);
+      for(var idx=0;idx<savedSets.length;idx++){
+        var s=savedSets[idx];var i=idx+1;
+        var w=document.getElementById('w-'+lift+'-'+i);
+        var r=document.getElementById('r-'+lift+'-'+i);
+        var f=document.getElementById('f-'+lift+'-'+i);
+        var c=document.getElementById('c-'+lift+'-'+i);
+        if(w&&s.w){w.value=s.w;w.classList.add('filled');}
+        if(r&&s.r){r.value=s.r;r.classList.add('filled');}
+        if(f&&s.f)f.value=s.f;
+        if(c&&s.done)c.classList.add('done');
+      }
+      var n=document.getElementById('note-'+lift);
+      if(n&&draft.lifts[lift].note)n.value=draft.lifts[lift].note;
+      updStat(lift);
+    }
+    var sn=document.getElementById('session-notes');
+    if(sn&&draft.notes)sn.value=draft.notes;
+    updLogProg();
+  }catch(e){}
+}
+
+function renderPrevs(){
+  var sessions=getAllSessions();
+  for(var l=0;l<LIFTS.length;l++){
+    var lift=LIFTS[l];
+    var el=document.getElementById('ip-'+lift);
+    if(!el)continue;
+    var rel=[];
+    for(var i=0;i<sessions.length;i++){
+      var s=sessions[i];
+      if(s.lifts&&s.lifts[lift]&&s.lifts[lift].sets){
+        var has=false;
+        for(var j=0;j<s.lifts[lift].sets.length;j++)if(s.lifts[lift].sets[j].w||s.lifts[lift].sets[j].r){has=true;break;}
+        if(has)rel.push(s);
+      }
+      if(rel.length>=5)break;
+    }
+    if(rel.length===0){
+      el.innerHTML='<em style="color:var(--muted);font-size:.68rem">No history yet</em>';
+      continue;
+    }
+    var html='';
+    for(var i=0;i<rel.length;i++){
+      var sess=rel[i];
+      var parts=[];
+      for(var j=0;j<sess.lifts[lift].sets.length;j++){
+        var x=sess.lifts[lift].sets[j];
+        if(x.w&&x.r)parts.push(x.w+'×'+x.r);
+      }
+      html+='<div class="ip-row"><span class="ip-date">'+sess.date+'</span><span class="ip-sets">'+(parts.join(' / ')||'—')+'</span></div>';
+    }
+    el.innerHTML=html;
+    var bestEl=document.getElementById('best-'+lift);
+    if(bestEl){
+      var bv=0,bw=0,br=0;
+      for(var i=0;i<sessions.length;i++){
+        var s=sessions[i];
+        if(s.lifts&&s.lifts[lift]&&s.lifts[lift].sets){
+          for(var j=0;j<s.lifts[lift].sets.length;j++){
+            var x=s.lifts[lift].sets[j];
+            var v=(+x.w||0)*(+x.r||0);
+            if(v>bv){bv=v;bw=x.w;br=x.r;}
+          }
+        }
+      }
+      bestEl.textContent=bw?'Best: '+bw+'×'+br:'';
+    }
+  }
+}
+
+function filt(lift,btn){
+  histFilt=lift;
+  var btns=document.querySelectorAll('.f-btn');
+  for(var i=0;i<btns.length;i++)btns[i].classList.remove('active');
+  btn.classList.add('active');
+  renderHist();
+}
+
+function renderHist(){
+  var sessions=getAllSessions();
+  var c=document.getElementById('hist-content');
+  if(!c)return;
+  if(!sessions.length){c.innerHTML='<div class="hist-empty">No sessions yet.</div>';return;}
+  var html='';
+  if(histFilt==='all'){
+    for(var i=0;i<sessions.length;i++){
+      var sess=sessions[i];
+      var fl=[];
+      for(var l=0;l<LIFTS.length;l++){
+        var lift=LIFTS[l];
+        if(sess.lifts&&sess.lifts[lift]&&sess.lifts[lift].sets){
+          var has=false;
+          for(var j=0;j<sess.lifts[lift].sets.length;j++)if(sess.lifts[lift].sets[j].w||sess.lifts[lift].sets[j].r){has=true;break;}
+          if(has)fl.push(lift);
+        }
+      }
+      if(!fl.length)continue;
+      html+='<div class="hlb"><div class="hln">'+sess.date+' <span style="color:var(--muted);font-size:.75rem">· '+(sess.type||'')+'</span></div>';
+      for(var k=0;k<fl.length;k++){
+        var lift=fl[k];
+        var ld=sess.lifts[lift];
+        var filled=[];
+        for(var j=0;j<ld.sets.length;j++)if(ld.sets[j].w||ld.sets[j].r)filled.push(ld.sets[j]);
+        html+='<div class="hs"><div class="hsh"><span>'+LNAMES[lift]+'</span></div>';
+        for(var j=0;j<filled.length;j++){
+          var s=filled[j];
+          html+='<div class="hsr"><span class="hi">Set '+(j+1)+'</span><span class="hw">'+(s.w?s.w+' lbs':'—')+'</span><span class="hrp">'+(s.r?s.r+' reps':'—')+'</span><span class="hf">'+(s.f||'')+'</span></div>';
+        }
+        if(ld.note)html+='<div class="hn2">📝 '+ld.note+'</div>';
+        html+='</div>';
+      }
+      html+='</div>';
+    }
+  }else{
+    var rel=[];
+    for(var i=0;i<sessions.length;i++){
+      var s=sessions[i];
+      if(s.lifts&&s.lifts[histFilt]&&s.lifts[histFilt].sets){
+        var has=false;
+        for(var j=0;j<s.lifts[histFilt].sets.length;j++)if(s.lifts[histFilt].sets[j].w||s.lifts[histFilt].sets[j].r){has=true;break;}
+        if(has)rel.push(s);
+      }
+    }
+    if(!rel.length){c.innerHTML='<div class="hist-empty">No history for '+LNAMES[histFilt]+'.</div>';return;}
+    html+='<div class="hlb"><div class="hln">'+LNAMES[histFilt]+'</div>';
+    for(var i=0;i<rel.length;i++){
+      var sess=rel[i];
+      var ld=sess.lifts[histFilt];
+      var filled=[];
+      for(var j=0;j<ld.sets.length;j++)if(ld.sets[j].w||ld.sets[j].r)filled.push(ld.sets[j]);
+      html+='<div class="hs"><div class="hsh"><span class="dt">'+sess.date+' · '+(sess.type||'')+'</span></div>';
+      for(var j=0;j<filled.length;j++){
+        var s=filled[j];
+        html+='<div class="hsr"><span class="hi">Set '+(j+1)+'</span><span class="hw">'+(s.w?s.w+' lbs':'—')+'</span><span class="hrp">'+(s.r?s.r+' reps':'—')+'</span><span class="hf">'+(s.f||'')+'</span></div>';
+      }
+      if(ld.note)html+='<div class="hn2">📝 '+ld.note+'</div>';
+      html+='</div>';
+    }
+    html+='</div>';
+  }
+  c.innerHTML=html||'<div class="hist-empty">No data.</div>';
+}
+
+function renderProg(){
+  var sessions=getAllSessions();
+  var c=document.getElementById('prog-content');
+  if(!c)return;
+  if(!sessions.length){c.innerHTML='<div class="hist-empty">No data.</div>';return;}
+  var html='';
+  for(var l=0;l<LIFTS.length;l++){
+    var lift=LIFTS[l];
+    var rel=[];
+    for(var i=0;i<sessions.length;i++){
+      var s=sessions[i];
+      if(s.lifts&&s.lifts[lift]&&s.lifts[lift].sets){
+        var has=false;
+        for(var j=0;j<s.lifts[lift].sets.length;j++)if(s.lifts[lift].sets[j].w){has=true;break;}
+        if(has)rel.push(s);
+      }
+    }
+    if(!rel.length)continue;
+    rel=rel.slice(0,10).reverse();
+    var pts=[];
+    for(var i=0;i<rel.length;i++){
+      var top=0;
+      for(var j=0;j<rel[i].lifts[lift].sets.length;j++){
+        var v=+rel[i].lifts[lift].sets[j].w||0;
+        if(v>top)top=v;
+      }
+      pts.push({date:rel[i].date.split(',')[0],w:top});
+    }
+    var maxW=0;
+    for(var i=0;i<pts.length;i++)if(pts[i].w>maxW)maxW=pts[i].w;
+    if(!maxW)continue;
+    html+='<div class="pc"><div class="pc-name">'+LNAMES[lift]+'<span class="pc-pr">Best: '+maxW+' lbs</span></div>';
+    for(var i=0;i<pts.length;i++){
+      var pct=Math.round((pts[i].w/maxW)*100);
+      html+='<div class="bar-row"><div class="bar-date">'+pts[i].date+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div><div class="bar-val">'+pts[i].w+' lbs</div></div></div>';
+    }
+    html+='</div>';
+  }
+  c.innerHTML=html||'<div class="hist-empty">Log more sessions.</div>';
+}
+
+function clearLog(){
+  if(!confirm('Clear this session? Saved history NOT affected.'))return;
+  for(var l=0;l<LIFTS.length;l++){
+    var lift=LIFTS[l];
+    for(var i=1;i<=ctrs[lift];i++){
+      var fields=['w','r','f'];
+      for(var f=0;f<fields.length;f++){
+        var e=document.getElementById(fields[f]+'-'+lift+'-'+i);
+        if(e){e.value='';e.classList.remove('filled');}
+      }
+      var c=document.getElementById('c-'+lift+'-'+i);
+      if(c)c.classList.remove('done');
+    }
+    var n=document.getElementById('note-'+lift);
+    if(n)n.value='';
+    updStat(lift);
+  }
+  var sn=document.getElementById('session-notes');
+  if(sn)sn.value='';
+  updLogProg();
+  _currentSessId=null;
+  D(SK_D);
+}
+
+function clearHist(){
+  if(!confirm('Clear your saved sessions? (Hardcoded history stays in the file forever.)'))return;
+  D(SK);
+  renderHist();
+  renderPrevs();
+}
+
+function getBackupText(){
+  var sessions=getAllSessions();
+  if(!sessions.length){alert('No saved sessions to backup. Log a workout first!');return null;}
+  return 'PROLIFIC_BACKUP::'+btoa(JSON.stringify({sessions:sessions}));
+}
+
+function showBackupTA(txt){
+  var ta=document.getElementById('backup-ta');
+  if(!ta)return;
+  ta.value=txt;
+  ta.style.height='120px';
+  ta.style.padding='8px';
+  ta.style.marginTop='10px';
+  ta.style.opacity='1';
+  ta.style.border='2px solid #c8a84e';
+}
+
+function showMsg(text,color){
+  var msg=document.getElementById('bk-msg');
+  if(!msg)return;
+  msg.textContent=text;
+  msg.style.color=color||'#4ade80';
+  msg.style.background=color==='#fbbf24'?'rgba(251,191,36,0.1)':'rgba(74,222,128,0.1)';
+  msg.style.display='block';
+  if(color!=='#fbbf24'){setTimeout(function(){msg.style.display='none';},10000);}
+}
+
+function doCopyBackup(){
+  var txt=getBackupText();
+  if(!txt)return;
+
+  // Show the textarea immediately so user can see something happened
+  showBackupTA(txt);
+
+  // Method 1: Clipboard API with proper async handling
+  if(navigator.clipboard&&typeof navigator.clipboard.writeText==='function'){
+    navigator.clipboard.writeText(txt).then(function(){
+      showMsg('✅ Copied to clipboard! Paste into Notes → send to Claude.');
+      var btn=document.getElementById('copy-btn');
+      if(btn){btn.textContent='✅ COPIED!';setTimeout(function(){btn.textContent='📋 COPY BACKUP';},3000);}
+    }).catch(function(){
+      // Clipboard API rejected — try execCommand
+      tryExecCopy(txt);
+    });
+    return;
+  }
+
+  // Method 2: execCommand fallback
+  tryExecCopy(txt);
+}
+
+function tryExecCopy(txt){
+  var ta=document.getElementById('backup-ta');
+  if(!ta)return;
+  var copied=false;
+  try{
+    // Create a temporary textarea (non-readonly, visible) for execCommand
+    var temp=document.createElement('textarea');
+    temp.value=txt;
+    temp.style.position='fixed';
+    temp.style.left='0';
+    temp.style.top='0';
+    temp.style.width='100%';
+    temp.style.height='100px';
+    temp.style.opacity='0.01';
+    temp.style.fontSize='16px'; // Prevents iOS zoom
+    document.body.appendChild(temp);
+    temp.focus();
+    temp.setSelectionRange(0,txt.length);
+    copied=document.execCommand('copy');
+    document.body.removeChild(temp);
+  }catch(e){}
+
+  if(copied){
+    showMsg('✅ Copied to clipboard! Paste into Notes → send to Claude.');
+    var btn=document.getElementById('copy-btn');
+    if(btn){btn.textContent='✅ COPIED!';setTimeout(function(){btn.textContent='📋 COPY BACKUP';},3000);}
+  }else{
+    // Final fallback: show textarea, let user manually copy
+    ta.focus();
+    try{ta.setSelectionRange(0,ta.value.length);}catch(e){ta.select();}
+    showMsg('⬆ Tap the gold text above → Select All → Copy. Then paste into Notes.','#fbbf24');
+  }
+}
+
+function doShareBackup(){
+  var txt=getBackupText();
+  if(!txt)return;
+
+  // iOS Share Sheet — most reliable on PWA
+  if(navigator.share){
+    navigator.share({
+      title:'Wa$h Fitness Backup',
+      text:txt
+    }).then(function(){
+      showMsg('✅ Shared successfully!');
+    }).catch(function(err){
+      // User cancelled share — not an error, but show the textarea as fallback
+      if(err.name==='AbortError'){
+        showBackupTA(txt);
+        showMsg('Share cancelled. You can copy the text above manually.','#fbbf24');
+      }else{
+        // Share API genuinely failed — fall back to copy
+        doCopyBackup();
+      }
+    });
+  }else{
+    // No Share API (desktop browser etc) — fall back to copy
+    doCopyBackup();
+  }
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  try{
+    var d=new Date();
+    var dateStr=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    var shortStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    var subEl=document.getElementById('today-date-sub');
+    var lblEl=document.getElementById('today-date-label');
+    if(subEl)subEl.textContent=dateStr+' · 90-Min Session';
+    if(lblEl)lblEl.textContent=shortStr;
+    var y=d.getFullYear(),m=String(d.getMonth()+1),dd=String(d.getDate());
+    if(m.length<2)m='0'+m;
+    if(dd.length<2)dd='0'+dd;
+    var logDateEl=document.getElementById('log-date');
+    if(logDateEl)logDateEl.value=y+'-'+m+'-'+dd;
+    for(var l=0;l<LIFTS.length;l++)for(var i=0;i<DSETS[LIFTS[l]];i++)addSet(LIFTS[l],false);
+    updLogProg();
+    recountToday();
+    var sn=document.getElementById('session-notes');
+    if(sn)sn.addEventListener('input',autoSave);
+    if(logDateEl)logDateEl.addEventListener('change',autoSave);
+    restoreDraft();
+    renderPrevs();
+    updateXPUI();
+  }catch(e){}
+});
+</script>
+</body>
+</html>
