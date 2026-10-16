@@ -289,7 +289,8 @@ footer span{color:var(--gold);}
   <div style="max-width:760px;margin:18px auto 0;">
     <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px;">Choose Today's Plan</div>
     <select class="plan-dd" id="plan-dropdown" onchange="setPlan(this.value)">
-      <option value="tue-oct13-dynamic-upper-6040" selected>💪🔥 Tue Oct 13 · Dynamic Upper · 60/40</option>
+      <option value="fri-oct16-fullbody-hybrid-hiit-6040" selected>⚡🔥 Fri Oct 16 · Full Body High Intensity · Mobility Hybrid</option>
+      <option value="tue-oct13-dynamic-upper-6040">💪🔥 Tue Oct 13 · Dynamic Upper · 60/40</option>
       <option value="mon-oct12-dynamic-lower-quality-6040">🦵🔥 Mon Oct 12 · Dynamic Lower · Quality Strength</option>
       <option value="fri-oct9-dynamic-upper-6040">⚡💪 Fri Oct 9 · Dynamic Upper · 60/40</option>
       <option value="tue-oct6-partner-dynamic-lower-6040">🦵🤝 Tue Oct 6 · Partner Dynamic Lower · 60/40</option>
@@ -353,8 +354,49 @@ footer span{color:var(--gold);}
   <!-- MON LATE NIGHT HEAVY (extra back care, solid intensity) -->
   <!-- TUE DYNAMIC UPPER (majority upper, light lower touches, core + cardio) -->
   <!-- MON APR 27 FULL BODY · LOWER FOCUS · 75 min · solid intensity -->
+  <!-- FRI OCT 16 FULL BODY HIGH INTENSITY · MOBILITY HYBRID · 60 MIN -->
+  <div class="plan-panel active" id="plan-fri-oct16-fullbody-hybrid-hiit-6040">
+    <h2 style="color:#00d4ff;margin:0 0 10px 0;">⚡🔥 Friday, October 16 — Full Body High Intensity · Mobility Hybrid</h2>
+    <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">Full Body · 60 Minutes · Power + Hybrid Supersets + Core + Finisher + Mobility</p>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warm-up</div><div class="ph-time">0–8 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Dynamic Warm-up <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Easy cardio to break a sweat | Leg swings | Arm circles | World's Greatest Stretch | Bodyweight squats</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span><span class="tag t-mobility">Mobility</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>⚡</span><div class="ph-name">Superset A — Power Pair</div><div class="ph-time">8–20 min</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Kettlebell Swing — 4 × 12 <span class="xp-badge">+50 XP</span></div><div class="ex-detail">44 → 53 lb</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-cardio">Cardio</span></div></div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Dumbbell Push Press — 4 × 6 each hand <span class="xp-badge">+50 XP</span></div><div class="ex-detail">40 → 50 lb</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Superset B — Pull + Push Hybrid</div><div class="ph-time">20–32 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Single-Arm Landmine Row — 3 × 10 each arm <span class="xp-badge">+45 XP</span></div><div class="ex-detail">45 → 60 lb</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Push-Up to Renegade Row — 3 × 6 each side <span class="xp-badge">+45 XP</span></div><div class="ex-detail">15 → 20 lb</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-core">Core</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Hinge + Mobility</div><div class="ph-time">32–44 min</div></div>
+      <div class="ex" data-xp="40" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cossack Squat to Reach — 3 × 6 each side <span class="xp-badge">+40 XP</span></div><div class="ex-detail"></div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Single-Leg DB RDL to Row — 3 × 8 each leg <span class="xp-badge">+45 XP</span></div><div class="ex-detail">25 → 35 lb</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Core Circuit</div><div class="ph-time">44–54 min</div></div>
+      <div class="ex" data-xp="40" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Half Turkish Get-Up — 3 × 3 each side <span class="xp-badge">+40 XP</span></div><div class="ex-detail">20 → 26 lb</div><div class="ex-tags"><span class="tag t-core">Core</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pallof Press Hold — 3 × 30 sec each side <span class="xp-badge">+30 XP</span></div><div class="ex-detail">40 lb</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hollow Body Rock — 3 × 10 <span class="xp-badge">+30 XP</span></div><div class="ex-detail"></div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Finisher</div><div class="ph-time">54–58 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Battle Ropes — 6 × 20 sec <span class="xp-badge">+35 XP</span></div><div class="ex-detail">20 sec hard / 40 sec easy</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Mobility Finish</div><div class="ph-time">58–60 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Mobility Finish <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Easy stretching for hips, hamstrings, chest and shoulders</div><div class="ex-tags"><span class="tag t-flexibility">Flexibility</span></div></div></div>
+    </div>
+
+    <p style="text-align:center;color:#00d4ff;margin-top:15px;font-weight:bold;font-size:1.1em;">⚡🔥 EFFICIENT. DYNAMIC. LET'S BE GREAT, PAPPASITO! 👑</p>
+  </div>
+
   <!-- TUE OCT 13 DYNAMIC UPPER · 60/40 · 75 MIN -->
-  <div class="plan-panel active" id="plan-tue-oct13-dynamic-upper-6040">
+  <div class="plan-panel" id="plan-tue-oct13-dynamic-upper-6040">
     <h2 style="color:#00d4ff;margin:0 0 10px 0;">💪🔥 Tuesday, October 13 — Dynamic Upper</h2>
     <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">60% Upper · 40% Lower · 75 Minutes · Supersets + Core + Cardio + Mobility</p>
     <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Hamstrings and glutes went heavy Monday, so today's lower hits quads, inner thighs and ankles. Nothing repeats from Friday or Monday. If short on time, drop Superset C.</p>
@@ -2735,7 +2777,7 @@ var ctrs={};for(var i=0;i<LIFTS.length;i++)ctrs[LIFTS[i]]=0;
 var logType='LEG DAY';
 var histFilt='all';
 var autoT=null;
-var currentPlan='tue-oct13-dynamic-upper-6040';
+var currentPlan='fri-oct16-fullbody-hybrid-hiit-6040';
 var _currentSessId=null;
 
 // S() and L() defined earlier (before HARDCODED_XP init)
@@ -2798,6 +2840,7 @@ function syncLogType(){
 // Maps each plan ID to the session type that should auto-fill on the Log tab
 // Non-standard exercises per plan — auto-populated into Quick Log (names pre-filled, fully editable)
 var PLAN_QUICK_EXERCISES={
+  'fri-oct16-fullbody-hybrid-hiit-6040':['Kettlebell Swing','Dumbbell Push Press','Single-Arm Landmine Row','Push-Up to Renegade Row','Cossack Squat to Reach','Single-Leg DB RDL to Row','Half Turkish Get-Up','Pallof Press Hold','Hollow Body Rock','Battle Ropes'],
   'tue-oct13-dynamic-upper-6040':[
     'Incline Barbell Bench Press',
     'T-Bar Row',
@@ -3038,6 +3081,7 @@ var PLAN_QUICK_EXERCISES={
 };
 
 var PLAN_TYPES={
+  'fri-oct16-fullbody-hybrid-hiit-6040':'FULL BODY HIGH INTENSITY · MOBILITY HYBRID',
   'tue-oct13-dynamic-upper-6040':'DYNAMIC UPPER FOCUS · 60/40',
   'mon-oct12-dynamic-lower-quality-6040':'DYNAMIC LOWER · QUALITY STRENGTH · 60/40',
   'fri-oct9-dynamic-upper-6040':'DYNAMIC UPPER FOCUS · 60/40',
