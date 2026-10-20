@@ -2758,6 +2758,10 @@ footer span{color:var(--gold);}
     <div class="ladder-row" id="ladder-4"><div class="ladder-num">LVL 4</div><div class="ladder-name">MR. WASHINGTON</div><div class="ladder-xp">5,000 XP</div></div>
     <div class="ladder-row" id="ladder-5"><div class="ladder-num">LVL 5</div><div class="ladder-name">THE PROLIFIC WAY</div><div class="ladder-xp">8,500 XP</div></div>
     <div class="ladder-row" id="ladder-6"><div class="ladder-num">LVL 6</div><div class="ladder-name">GENERATIONAL WEALTH</div><div class="ladder-xp">13,000 XP</div></div>
+    <div class="ladder-row" id="ladder-7"><div class="ladder-num">LVL 7</div><div class="ladder-name">LEGACY BUILDER</div><div class="ladder-xp">18,500 XP</div></div>
+    <div class="ladder-row" id="ladder-8"><div class="ladder-num">LVL 8</div><div class="ladder-name">UNTOUCHABLE</div><div class="ladder-xp">25,000 XP</div></div>
+    <div class="ladder-row" id="ladder-9"><div class="ladder-num">LVL 9</div><div class="ladder-name">HALL OF FAMER</div><div class="ladder-xp">32,500 XP</div></div>
+    <div class="ladder-row" id="ladder-10"><div class="ladder-num">LVL 10</div><div class="ladder-name">THE GOAT</div><div class="ladder-xp">41,000 XP</div></div>
   </div>
 </div>
 
@@ -2816,7 +2820,11 @@ var LEVELS=[
   {lvl:3, name:'CERTIFIED DOG',       xp:2500,  emoji:'🔥', msg:'The consistency is paying off. You put in the work and it shows.'},
   {lvl:4, name:'MR. WASHINGTON',      xp:5000,  emoji:'⭐', msg:'Your name means something now. Keep earning it.'},
   {lvl:5, name:'THE PROLIFIC WAY',    xp:8500,  emoji:'👑', msg:"You don't just train — you operate at a different level. Elite."},
-  {lvl:6, name:'GENERATIONAL WEALTH', xp:13000, emoji:'💰', msg:'The habits you built in the gym translate to every part of your life. Legacy.'}
+  {lvl:6, name:'GENERATIONAL WEALTH', xp:13000, emoji:'💰', msg:'The habits you built in the gym translate to every part of your life. Legacy.'},
+  {lvl:7, name:'LEGACY BUILDER',      xp:18500, emoji:'🏛️', msg:'Phase 3 unlocked. You are building something that outlasts the workout, Mr. Washington.'},
+  {lvl:8, name:'UNTOUCHABLE',         xp:25000, emoji:'💎', msg:'Nobody is out-working you. Stay hungry anyway.'},
+  {lvl:9, name:'HALL OF FAMER',       xp:32500, emoji:'🏆', msg:'Years of showing up, written in the numbers. This is a career, not a phase.'},
+  {lvl:10, name:'THE GOAT',           xp:41000, emoji:'🐐', msg:'Top of the ladder, Mr. Washington. Now defend it.'}
 ];
 // ═══════ END LEVEL SYSTEM ═══════
 
@@ -3356,8 +3364,19 @@ function updateXPUI(){
     if(toGo)toGo.textContent='👑 MAXED OUT';
     if(fill)fill.style.width='100%';
   }
+  // Phase follows level: Phase 1 = LVL 1-3, Phase 2 = LVL 4-6, Phase 3 = LVL 7+
+  var phase=cur.lvl<=3?1:(cur.lvl<=6?2:3);
+  for(var p=1;p<=3;p++){
+    var chip=document.getElementById('phase-'+p);
+    if(!chip)continue;
+    chip.classList.remove('active','done');
+    if(p===phase)chip.classList.add('active');
+    else if(p<phase)chip.classList.add('done');
+  }
+  var lvlSub=document.getElementById('xp-lvl-sub');
+  if(lvlSub)lvlSub.textContent=lvlSub.textContent.replace(/Phase \d/,'Phase '+phase);
   // Update ladder
-  for(var i=1;i<=6;i++){
+  for(var i=1;i<=LEVELS.length;i++){
     var row=document.getElementById('ladder-'+i);
     if(!row)continue;
     row.classList.remove('current','achieved');
