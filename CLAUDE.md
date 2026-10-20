@@ -4,7 +4,9 @@ Single-file app: everything lives in `index.html` (HTML, CSS and one inline `<sc
 
 ## Deploying
 
-- The owner's phone loads the app from the `main` branch (GitHub Pages), so a push to `main` is the deploy.
+- The app is hosted on GitHub Pages from the `main` branch (root) at https://dwa5hington.github.io/wash-fitness-tracker/, so a push to `main` is the deploy.
+- It used to be hosted on Netlify (washfitnesstracker.netlify.app). That site stopped updating when the Netlify plan ran out of build credits, so don't rely on it.
+- The phone's XP and diamonds live in the browser, keyed to the site's address. `HARDCODED_XP` and `HARDCODED_DIAMONDS` are the floor that survives a reset or an address change, so raise them when the owner reports higher numbers.
 - When asked to "push to main", commit directly to `main` and push there. Don't use a side branch or open a PR unless asked.
 - If the owner asks to review first, show the diff and wait for an explicit "yes" before committing or pushing.
 - After a push, remind the owner to refresh the app on their phone (pull to refresh, or close and reopen).
