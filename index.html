@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-10-27.2">
+<meta name="app-version" content="2026-10-27.3">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -4174,21 +4174,17 @@ function renderPRBoard(){
   var cells='';
   for(var l=0;l<LIFTS.length;l++){
     var lift=LIFTS[l];
-    var bestVol=0,bw='',br='',bdate='',isBW=false;
+    // Best = heaviest weight lifted (ties go to the set with more reps), same as the Log tab cards;
+    // a lift only ever done at bodyweight shows its most reps
+    var topW=-1,topR=0,bw='',br='',bdate='',isBW=false;
     for(var i=0;i<sessions.length;i++){
       var s=sessions[i];
       if(s.lifts&&s.lifts[lift]&&s.lifts[lift].sets){
         for(var j=0;j<s.lifts[lift].sets.length;j++){
           var x=s.lifts[lift].sets[j];
           var wv=+x.w||0,rv=+x.r||0;
-          // For bodyweight lifts (pullup w=0), rank by reps
-          if(wv===0&&rv>0){
-            if(rv>bestVol&&isBW===false&&bw===''){/*skip*/}
-            if(rv>(isBW?bestVol:0)){bestVol=rv;bw='0';br=String(rv);bdate=s.date;isBW=true;}
-          }else{
-            var vol=wv*rv;
-            if(!isBW&&vol>bestVol){bestVol=vol;bw=String(wv);br=String(rv);bdate=s.date;}
-          }
+          if(!rv)continue;
+          if(wv>topW||(wv===topW&&rv>topR)){topW=wv;topR=rv;bw=String(wv);br=String(rv);bdate=s.date;isBW=(wv===0);}
         }
       }
     }
