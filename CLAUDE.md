@@ -10,6 +10,7 @@ Single-file app: everything lives in `index.html` (HTML, CSS and one inline `<sc
 - When asked to "push to main", commit directly to `main` and push there. Don't use a side branch or open a PR unless asked.
 - If the owner asks to review first, show the diff and wait for an explicit "yes" before committing or pushing.
 - After a push, remind the owner to refresh the app on their phone (pull to refresh, or close and reopen).
+- **Bump `<meta name="app-version">` in `index.html` on every push** (format `YYYY-MM-DD.N`, e.g. `2026-10-27.2`). The app checks this on open and reloads itself when the live version differs, so the Home Screen app doesn't get stuck on an old saved copy. Without a bump, the phone won't pick up the change.
 
 ## Adding a new day's plan
 
