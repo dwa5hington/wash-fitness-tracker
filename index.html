@@ -291,7 +291,8 @@ footer span{color:var(--gold);}
   <div style="max-width:760px;margin:18px auto 0;">
     <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px;">Choose Today's Plan</div>
     <select class="plan-dd" id="plan-dropdown" onchange="setPlan(this.value)">
-      <option value="mon-oct26-phase2-w1-lower-strength-6040" selected>🚀🦵 Mon Oct 26 · Phase 2 · Week 1 · Lower Strength · 60/40</option>
+      <option value="tue-oct27-phase2-w1-upper-strength-6040" selected>🚀💪 Tue Oct 27 · Phase 2 · Week 1 · Upper Strength · 60/40</option>
+      <option value="mon-oct26-phase2-w1-lower-strength-6040">🚀🦵 Mon Oct 26 · Phase 2 · Week 1 · Lower Strength · 60/40</option>
       <option value="tue-oct20-dynamic-upper-unilateral-6040">💪⚡ Tue Oct 20 · Dynamic Upper · Unilateral Series · 60/40</option>
       <option value="mon-oct19-dynamic-lower-tempo-6040">🦵🔥 Mon Oct 19 · Dynamic Lower · Tempo Series · 60/40</option>
       <option value="fri-oct16-fullbody-hybrid-hiit-6040">⚡🔥 Fri Oct 16 · Full Body High Intensity · Mobility Hybrid</option>
@@ -359,8 +360,54 @@ footer span{color:var(--gold);}
   <!-- MON LATE NIGHT HEAVY (extra back care, solid intensity) -->
   <!-- TUE DYNAMIC UPPER (majority upper, light lower touches, core + cardio) -->
   <!-- MON APR 27 FULL BODY · LOWER FOCUS · 75 min · solid intensity -->
+  <!-- TUE OCT 27 PHASE 2 · WEEK 1 · UPPER STRENGTH · 60/40 -->
+  <div class="plan-panel active" id="plan-tue-oct27-phase2-w1-upper-strength-6040">
+    <h2 style="color:#00d4ff;margin:0 0 10px 0;">🚀💪 Tuesday, October 27 — Phase 2 · Week 1 · Upper Strength</h2>
+    <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">60% Upper · 40% Lower</p>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warm-up</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Rower + Shoulder Prime <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Rower 3 min | Band dislocates ×10 | Scap push-ups ×10 | Open books ×6 each side | Wall slides ×10 | Empty-bar bench ×10</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span><span class="tag t-mobility">Mobility</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>⚡</span><div class="ph-name">Power Primer</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Plyometric Push-Up — 4 × 5 <span class="xp-badge">+35 XP</span></div><div class="ex-detail">Rest 45 sec</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Heavy Anchor Lifts</div></div>
+      <div class="ex" data-xp="60" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Barbell Bench Press — 5 × 5 <span class="xp-badge">+60 XP</span></div><div class="ex-detail">185 → 205 → 225 → 235 → 235</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+      <div class="ex" data-xp="55" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Weighted Neutral-Grip Pull-Up — 5 × 5 <span class="xp-badge">+55 XP</span></div><div class="ex-detail">+15 → +20 → +25 → +25 → +25 lb</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🏋️</span><div class="ph-name">Shoulders + Back</div></div>
+      <div class="ex" data-xp="50" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Standing Barbell Overhead Press — 4 × 6 <span class="xp-badge">+50 XP</span></div><div class="ex-detail">105 → 115 → 120 → 120</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Landmine Meadows Row — 4 × 8 each arm <span class="xp-badge">+45 XP</span></div><div class="ex-detail">50 → 60 → 70 → 70 lb</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Accessories</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Dips — 3 × 12 <span class="xp-badge">+35 XP</span></div><div class="ex-detail"></div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Face Pull — 3 × 15 <span class="xp-badge">+30 XP</span></div><div class="ex-detail">30 → 35 → 35</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Lower 40%</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Spanish Squat Hold — 3 × 30 sec <span class="xp-badge">+35 XP</span></div><div class="ex-detail"></div><div class="ex-tags"><span class="tag t-lower">Lower</span></div></div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Single-Leg Calf Raise — 3 × 12 each leg <span class="xp-badge">+25 XP</span></div><div class="ex-detail"></div><div class="ex-tags"><span class="tag t-lower">Lower</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Core + Cardio</div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Copenhagen Plank — 3 × 20 sec each side <span class="xp-badge">+30 XP</span></div><div class="ex-detail"></div><div class="ex-tags"><span class="tag t-core">Core</span><span class="tag t-lower">Lower</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Low-to-High Cable Woodchopper — 2 × 12 each side <span class="xp-badge">+30 XP</span></div><div class="ex-detail">30 → 40</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Air Bike Intervals — 5 × 20 sec <span class="xp-badge">+35 XP</span></div><div class="ex-detail">20 sec all-out / 40 sec easy</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Mobility Finish</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Mobility Finish <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Doorway pec stretch | Child's pose lat walk | Cross-body shoulder stretch | Thread-the-needle</div><div class="ex-tags"><span class="tag t-flexibility">Flexibility</span></div></div></div>
+    </div>
+
+    <p style="text-align:center;color:#00d4ff;margin-top:15px;font-weight:bold;font-size:1.1em;">🚀💪 EFFICIENT. DYNAMIC. LET'S BE GREAT, PAPPASITO! 👑</p>
+  </div>
+
   <!-- MON OCT 26 PHASE 2 · WEEK 1 · LOWER STRENGTH · 60/40 · 90 MIN -->
-  <div class="plan-panel active" id="plan-mon-oct26-phase2-w1-lower-strength-6040">
+  <div class="plan-panel" id="plan-mon-oct26-phase2-w1-lower-strength-6040">
     <h2 style="color:#00d4ff;margin:0 0 10px 0;">🚀🦵 Monday, October 26 — Phase 2 · Week 1 · Lower Strength Foundation</h2>
     <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">60% Lower · 40% Upper · 90 Minutes</p>
     <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Phase 2 starts today: fewer reps and heavier loads on the anchor lifts, power first, mobility woven in. Week 1 is fives at a weight you own. Add weight each week and deload in week 4. If short on time, drop Superset D2.</p>
@@ -2928,7 +2975,7 @@ var ctrs={};for(var i=0;i<LIFTS.length;i++)ctrs[LIFTS[i]]=0;
 var logType='LEG DAY';
 var histFilt='all';
 var autoT=null;
-var currentPlan='mon-oct26-phase2-w1-lower-strength-6040';
+var currentPlan='tue-oct27-phase2-w1-upper-strength-6040';
 var _currentSessId=null;
 
 // S() and L() defined earlier (before HARDCODED_XP init)
@@ -2991,6 +3038,7 @@ function syncLogType(){
 // Maps each plan ID to the session type that should auto-fill on the Log tab
 // Non-standard exercises per plan — auto-populated into Quick Log (names pre-filled, fully editable)
 var PLAN_QUICK_EXERCISES={
+  'tue-oct27-phase2-w1-upper-strength-6040':['Plyometric Push-Up','Barbell Bench Press','Weighted Neutral-Grip Pull-Up','Standing Barbell Overhead Press','Landmine Meadows Row','Dips','Face Pull','Spanish Squat Hold','Single-Leg Calf Raise','Copenhagen Plank','Low-to-High Cable Woodchopper','Air Bike Intervals'],
   'mon-oct26-phase2-w1-lower-strength-6040':['Box Jump to Step Down','Hacksaw Squat','Barbell Hip Thrust','Front-Foot Elevated Split Squat','Seated Leg Curl','Incline Dumbbell Press','T-Bar Row','Cable Lateral Raise','Hammer Curl','Landmine 180s','L-Sit Hold','Treadmill Incline Sprints'],
   'tue-oct20-dynamic-upper-unilateral-6040':['Close-Grip Bench Press','Chest-Supported Dumbbell Row','Half-Kneeling Landmine Press','Single-Arm Lat Pulldown','Bayesian Cable Curl','Overhead Cable Triceps Extension','Rear Delt Fly','Romanian Deadlift','Slider Lateral Lunge','Seated Adductor Machine','Landmine 180s','Suitcase Carry','Ski Erg Intervals'],
   'mon-oct19-dynamic-lower-tempo-6040':['Hacksaw Squat','Barbell Hip Thrust','DB Step-Up to Reverse Lunge','Lying Leg Curl','Weighted Neutral-Grip Pull-Up','Low-to-High Cable Fly','Cable Y-Raise','Incline Spider Curl','Cable Crunch','Side Plank Hip Dips','Sled Push'],
@@ -3235,6 +3283,7 @@ var PLAN_QUICK_EXERCISES={
 };
 
 var PLAN_TYPES={
+  'tue-oct27-phase2-w1-upper-strength-6040':'PHASE 2 · WEEK 1 · UPPER STRENGTH · 60/40',
   'mon-oct26-phase2-w1-lower-strength-6040':'PHASE 2 · WEEK 1 · LOWER STRENGTH · 60/40',
   'tue-oct20-dynamic-upper-unilateral-6040':'DYNAMIC UPPER · UNILATERAL SERIES · 60/40',
   'mon-oct19-dynamic-lower-tempo-6040':'DYNAMIC LOWER · TEMPO SERIES · 60/40',
