@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-10-27.3">
+<meta name="app-version" content="2026-10-30.1">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -292,7 +292,8 @@ footer span{color:var(--gold);}
   <div style="max-width:760px;margin:18px auto 0;">
     <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px;">Choose Today's Plan</div>
     <select class="plan-dd" id="plan-dropdown" onchange="setPlan(this.value)">
-      <option value="tue-oct27-phase2-w1-upper-strength-6040" selected>🚀💪 Tue Oct 27 · Phase 2 · Week 1 · Upper Strength · 60/40</option>
+      <option value="fri-oct30-fullbody-pump-core" selected>🔥💪 Fri Oct 30 · Full Body Pump + Core · 60 Min</option>
+      <option value="tue-oct27-phase2-w1-upper-strength-6040">🚀💪 Tue Oct 27 · Phase 2 · Week 1 · Upper Strength · 60/40</option>
       <option value="mon-oct26-phase2-w1-lower-strength-6040">🚀🦵 Mon Oct 26 · Phase 2 · Week 1 · Lower Strength · 60/40</option>
       <option value="tue-oct20-dynamic-upper-unilateral-6040">💪⚡ Tue Oct 20 · Dynamic Upper · Unilateral Series · 60/40</option>
       <option value="mon-oct19-dynamic-lower-tempo-6040">🦵🔥 Mon Oct 19 · Dynamic Lower · Tempo Series · 60/40</option>
@@ -361,8 +362,51 @@ footer span{color:var(--gold);}
   <!-- MON LATE NIGHT HEAVY (extra back care, solid intensity) -->
   <!-- TUE DYNAMIC UPPER (majority upper, light lower touches, core + cardio) -->
   <!-- MON APR 27 FULL BODY · LOWER FOCUS · 75 min · solid intensity -->
+  <!-- FRI OCT 30 FULL BODY PUMP + CORE · 60 MIN -->
+  <div class="plan-panel active" id="plan-fri-oct30-fullbody-pump-core">
+    <h2 style="color:#00d4ff;margin:0 0 10px 0;">🔥💪 Friday, October 30 — Full Body Pump + Core</h2>
+    <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">Full Body · 60 Minutes · Supersets + Core + Finisher</p>
+    <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Pump day after Monday and Tuesday went heavy: moderate weights, 12–15 reps, 2-sec squeeze on every rep, 45–60 sec rest between rounds. Log Cable Row and Leg Press on their core lift cards. If short on time, cut Superset C to 2 rounds.</p>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warm-up</div><div class="ph-time">0–6 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bike + Activation <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Air bike or rower 3 min easy | Band pull-aparts ×15 | Bodyweight squats ×10 | Inchworms ×5</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span><span class="tag t-mobility">Mobility</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>💪</span><div class="ph-name">Superset A — Chest + Back</div><div class="ph-time">6–18 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Machine Chest Press — 3 × 15 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">120 → 130 → 140 | 2-sec squeeze at the top</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Seated Cable Row — 3 × 12 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">160 → 170 → 180 | Pause at the chest | Log on the Cable Row card</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Superset B — Legs</div><div class="ph-time">18–30 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Leg Press — 3 × 15 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">360 → 400 → 400 | Feet high and wide for glutes + hamstrings | Log on the Leg Press card</div><div class="ex-tags"><span class="tag t-lower">Lower</span></div></div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Seated Leg Curl — 3 × 12 <span class="xp-badge">+35 XP</span></div><div class="ex-detail">70 → 80 → 90 | 3-sec lowering</div><div class="ex-tags"><span class="tag t-lower">Lower</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Superset C — Shoulders + Arms (Tri-Set)</div><div class="ph-time">30–40 min</div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Lateral Raise — 3 × 15 each arm <span class="xp-badge">+30 XP</span></div><div class="ex-detail"><strong>NEW</strong> | 10 → 15 → 15</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Rope Triceps Pushdown — 3 × 15 <span class="xp-badge">+30 XP</span></div><div class="ex-detail">55 → 60 → 60</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Bayesian Cable Curl — 3 × 12 each arm <span class="xp-badge">+30 XP</span></div><div class="ex-detail">20 → 25 → 30</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Core Circuit</div><div class="ph-time">40–52 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Leg Raise — 3 × 12 <span class="xp-badge">+35 XP</span></div><div class="ex-detail">Slow lower, no swinging</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Crunch — 3 × 15 <span class="xp-badge">+35 XP</span></div><div class="ex-detail"><strong>NEW</strong> | 60 → 70 → 80 | Kneeling, round down toward the floor</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Weighted Dead Bug — 3 × 10 each side <span class="xp-badge">+30 XP</span></div><div class="ex-detail">30 → 35 lb</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>⚡</span><div class="ph-name">Finisher</div><div class="ph-time">52–56 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Air Bike Intervals — 4 × 20 sec <span class="xp-badge">+35 XP</span></div><div class="ex-detail">20 sec all-out / 40 sec easy | Rower if the bikes are taken</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Mobility Finish</div><div class="ph-time">56–60 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Mobility Finish <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Couch stretch 30 sec each side | Doorway pec stretch 30 sec each side | Child's pose lat walk 45 sec</div><div class="ex-tags"><span class="tag t-flexibility">Flexibility</span></div></div></div>
+    </div>
+
+    <p style="text-align:center;color:#00d4ff;margin-top:15px;font-weight:bold;font-size:1.1em;">🔥💪 FRIDAY PUMP. LET'S BE GREAT, PAPPASITO! 👑</p>
+  </div>
+
   <!-- TUE OCT 27 PHASE 2 · WEEK 1 · UPPER STRENGTH · 60/40 -->
-  <div class="plan-panel active" id="plan-tue-oct27-phase2-w1-upper-strength-6040">
+  <div class="plan-panel" id="plan-tue-oct27-phase2-w1-upper-strength-6040">
     <h2 style="color:#00d4ff;margin:0 0 10px 0;">🚀💪 Tuesday, October 27 — Phase 2 · Week 1 · Upper Strength</h2>
     <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">60% Upper · 40% Lower</p>
 
@@ -2977,7 +3021,7 @@ var ctrs={};for(var i=0;i<LIFTS.length;i++)ctrs[LIFTS[i]]=0;
 var logType='LEG DAY';
 var histFilt='all';
 var autoT=null;
-var currentPlan='tue-oct27-phase2-w1-upper-strength-6040';
+var currentPlan='fri-oct30-fullbody-pump-core';
 var _currentSessId=null;
 
 // S() and L() defined earlier (before HARDCODED_XP init)
@@ -3040,6 +3084,7 @@ function syncLogType(){
 // Maps each plan ID to the session type that should auto-fill on the Log tab
 // Non-standard exercises per plan — auto-populated into Quick Log (names pre-filled, fully editable)
 var PLAN_QUICK_EXERCISES={
+  'fri-oct30-fullbody-pump-core':['Machine Chest Press','Seated Leg Curl','Cable Lateral Raise','Rope Triceps Pushdown','Bayesian Cable Curl','Hanging Leg Raise','Cable Crunch','Weighted Dead Bug','Air Bike Intervals'],
   'tue-oct27-phase2-w1-upper-strength-6040':['Plyometric Push-Up','Barbell Bench Press','Weighted Neutral-Grip Pull-Up','Standing Barbell Overhead Press','Landmine Meadows Row','Dips','Face Pull','Spanish Squat Hold','Single-Leg Calf Raise','Copenhagen Plank','Low-to-High Cable Woodchopper','Air Bike Intervals'],
   'mon-oct26-phase2-w1-lower-strength-6040':['Box Jump to Step Down','Hacksaw Squat','Barbell Hip Thrust','Front-Foot Elevated Split Squat','Seated Leg Curl','Incline Dumbbell Press','T-Bar Row','Cable Lateral Raise','Hammer Curl','Landmine 180s','L-Sit Hold','Treadmill Incline Sprints'],
   'tue-oct20-dynamic-upper-unilateral-6040':['Close-Grip Bench Press','Chest-Supported Dumbbell Row','Half-Kneeling Landmine Press','Single-Arm Lat Pulldown','Bayesian Cable Curl','Overhead Cable Triceps Extension','Rear Delt Fly','Romanian Deadlift','Slider Lateral Lunge','Seated Adductor Machine','Landmine 180s','Suitcase Carry','Ski Erg Intervals'],
@@ -3285,6 +3330,7 @@ var PLAN_QUICK_EXERCISES={
 };
 
 var PLAN_TYPES={
+  'fri-oct30-fullbody-pump-core':'FULL BODY PUMP · CORE',
   'tue-oct27-phase2-w1-upper-strength-6040':'PHASE 2 · WEEK 1 · UPPER STRENGTH · 60/40',
   'mon-oct26-phase2-w1-lower-strength-6040':'PHASE 2 · WEEK 1 · LOWER STRENGTH · 60/40',
   'tue-oct20-dynamic-upper-unilateral-6040':'DYNAMIC UPPER · UNILATERAL SERIES · 60/40',
