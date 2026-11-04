@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-03.1">
+<meta name="app-version" content="2026-11-04.1">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -292,7 +292,8 @@ footer span{color:var(--gold);}
   <div style="max-width:760px;margin:18px auto 0;">
     <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px;">Choose Today's Plan</div>
     <select class="plan-dd" id="plan-dropdown" onchange="setPlan(this.value)">
-      <option value="tue-nov3-fullbody-mobility-strength" selected>💪🧘 Tue Nov 3 · Full Body · Mobility Strength · 60 Min</option>
+      <option value="wed-nov4-fullbody-mobility-strength-2" selected>🧘💪 Wed Nov 4 · Full Body · Mobility Strength II · 60 Min</option>
+      <option value="tue-nov3-fullbody-mobility-strength">💪🧘 Tue Nov 3 · Full Body · Mobility Strength · 60 Min</option>
       <option value="fri-oct30-fullbody-pump-core">🔥💪 Fri Oct 30 · Full Body Pump + Core · 60 Min</option>
       <option value="tue-oct27-phase2-w1-upper-strength-6040">🚀💪 Tue Oct 27 · Phase 2 · Week 1 · Upper Strength · 60/40</option>
       <option value="mon-oct26-phase2-w1-lower-strength-6040">🚀🦵 Mon Oct 26 · Phase 2 · Week 1 · Lower Strength · 60/40</option>
@@ -363,8 +364,46 @@ footer span{color:var(--gold);}
   <!-- MON LATE NIGHT HEAVY (extra back care, solid intensity) -->
   <!-- TUE DYNAMIC UPPER (majority upper, light lower touches, core + cardio) -->
   <!-- MON APR 27 FULL BODY · LOWER FOCUS · 75 min · solid intensity -->
+  <!-- WED NOV 4 FULL BODY · MOBILITY STRENGTH II · 60 MIN -->
+  <div class="plan-panel active" id="plan-wed-nov4-fullbody-mobility-strength-2">
+    <h2 style="color:#00d4ff;margin:0 0 10px 0;">🧘💪 Wednesday, November 4 — Full Body · Mobility Strength II</h2>
+    <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">Full Body · 60 Minutes · Full-Range Supersets + Core + Mobility</p>
+    <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Full-range strength with mobility built into every lift. Log Split Squat and Pull-Up (for the chin-ups) on their core lift cards. If short on time, drop Superset C to 2 rounds.</p>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warm-up</div><div class="ph-time">0–8 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Air Bike + Mobility Prime <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Air bike 3 min easy | Inchworm to World's Greatest Stretch ×4 | Deep squat prying hold 30 sec | Band dislocates ×10 | Ankle rocks ×10 each side</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span><span class="tag t-mobility">Mobility</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Superset A — Single Leg + Pull</div><div class="ph-time">8–22 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Front-Foot Elevated Split Squat — 3 × 8 each leg <span class="xp-badge">+45 XP</span></div><div class="ex-detail">40 → 45 → 50 lb each hand | Deep stretch at the bottom | Log on the Split Squat card</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Chin-Up — 3 × 8 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">Bodyweight | 3-sec lowering, full hang at the bottom | Log on the Pull-Up card</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🏋️</span><div class="ph-name">Superset B — Hinge + Press</div><div class="ph-time">22–34 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">KB Single-Leg RDL — 3 × 8 each leg <span class="xp-badge">+45 XP</span></div><div class="ex-detail">35 → 45 → 50 lb | Hips square, long hamstring stretch</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline DB Press — 3 × 10 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">65 → 70 → 75 | 2-sec stretch at the bottom</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Superset C — Squat + Shoulders</div><div class="ph-time">34–44 min</div></div>
+      <div class="ex" data-xp="40" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Heel-Elevated Goblet Squat — 3 × 10 <span class="xp-badge">+40 XP</span></div><div class="ex-detail">50 → 60 → 70 lb | 2-sec pause at the bottom</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Face Pull — 3 × 15 <span class="xp-badge">+30 XP</span></div><div class="ex-detail">30 → 35 → 35 | Pull apart and hold 1 sec</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Core</div><div class="ph-time">44–54 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Ab Wheel Rollouts — 3 × 12 <span class="xp-badge">+35 XP</span></div><div class="ex-detail">Ribs down, no low-back sag</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pallof Press Rotations — 3 × 12 each side <span class="xp-badge">+30 XP</span></div><div class="ex-detail">28 → 33</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Knee Raise — 3 × 15 <span class="xp-badge">+30 XP</span></div><div class="ex-detail">15 lb</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Mobility Finish</div><div class="ph-time">54–60 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Mobility Finish <span class="xp-badge">+10 XP</span></div><div class="ex-detail">90/90 hip switches ×6 each side | Couch stretch 45 sec each side | Frog stretch 45 sec | Thread-the-needle ×6 each side</div><div class="ex-tags"><span class="tag t-flexibility">Flexibility</span></div></div></div>
+    </div>
+
+    <p style="text-align:center;color:#00d4ff;margin-top:15px;font-weight:bold;font-size:1.1em;">🧘💪 STRONG THROUGH EVERY INCH. LET'S BE GREAT, PAPPASITO! 👑</p>
+  </div>
+
   <!-- TUE NOV 3 FULL BODY · MOBILITY STRENGTH · 60 MIN -->
-  <div class="plan-panel active" id="plan-tue-nov3-fullbody-mobility-strength">
+  <div class="plan-panel" id="plan-tue-nov3-fullbody-mobility-strength">
     <h2 style="color:#00d4ff;margin:0 0 10px 0;">💪🧘 Tuesday, November 3 — Full Body · Mobility Strength</h2>
     <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">Full Body · 60 Minutes · Full-Range Supersets + Core + Mobility</p>
     <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Every lift goes through a full range of motion, so strength and mobility happen together. Log RDL and Split Squat on their core lift cards. If short on time, do 1 round of woodchoppers and 2 rounds of the core block.</p>
@@ -3061,7 +3100,7 @@ var ctrs={};for(var i=0;i<LIFTS.length;i++)ctrs[LIFTS[i]]=0;
 var logType='LEG DAY';
 var histFilt='all';
 var autoT=null;
-var currentPlan='tue-nov3-fullbody-mobility-strength';
+var currentPlan='wed-nov4-fullbody-mobility-strength-2';
 var _currentSessId=null;
 
 // S() and L() defined earlier (before HARDCODED_XP init)
@@ -3124,6 +3163,7 @@ function syncLogType(){
 // Maps each plan ID to the session type that should auto-fill on the Log tab
 // Non-standard exercises per plan — auto-populated into Quick Log (names pre-filled, fully editable)
 var PLAN_QUICK_EXERCISES={
+  'wed-nov4-fullbody-mobility-strength-2':['KB Single-Leg RDL','Incline DB Press','Heel-Elevated Goblet Squat','Face Pull','Ab Wheel Rollouts','Pallof Press Rotations','Hanging Knee Raise'],
   'tue-nov3-fullbody-mobility-strength':['Single-Arm Cable Row','Goblet Cossack Squat','Half-Kneeling Landmine Press','High-to-Low Cable Woodchopper','Copenhagen Plank','Ab Wheel Rollouts','Suitcase Carry'],
   'fri-oct30-fullbody-pump-core':['Machine Chest Press','Seated Leg Curl','Cable Lateral Raise','Rope Triceps Pushdown','Bayesian Cable Curl','Hanging Leg Raise','Cable Crunch','Weighted Dead Bug','Air Bike Intervals'],
   'tue-oct27-phase2-w1-upper-strength-6040':['Plyometric Push-Up','Barbell Bench Press','Weighted Neutral-Grip Pull-Up','Standing Barbell Overhead Press','Landmine Meadows Row','Dips','Face Pull','Spanish Squat Hold','Single-Leg Calf Raise','Copenhagen Plank','Low-to-High Cable Woodchopper','Air Bike Intervals'],
@@ -3371,6 +3411,7 @@ var PLAN_QUICK_EXERCISES={
 };
 
 var PLAN_TYPES={
+  'wed-nov4-fullbody-mobility-strength-2':'FULL BODY · MOBILITY STRENGTH II',
   'tue-nov3-fullbody-mobility-strength':'FULL BODY · MOBILITY STRENGTH',
   'fri-oct30-fullbody-pump-core':'FULL BODY PUMP · CORE',
   'tue-oct27-phase2-w1-upper-strength-6040':'PHASE 2 · WEEK 1 · UPPER STRENGTH · 60/40',
