@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-04.2">
+<meta name="app-version" content="2026-11-04.3">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -284,7 +284,7 @@ footer span{color:var(--gold);}
   </div>
 
   <div class="today-hero">
-    <div class="hero-eyebrow">Prolific Partners · Week 7</div>
+    <div class="hero-eyebrow" id="hero-week">Prolific Partners · Week 7</div>
     <h1>LET'S BE <em>GREAT</em></h1>
     <div class="today-sub" id="today-date-sub">Loading...</div>
   </div>
@@ -3528,6 +3528,11 @@ function loadXP(){
   var changed=false;
   if(data.xp<HARDCODED_XP){data.xp=HARDCODED_XP;changed=true;}
   if(data.diamonds<HARDCODED_DIAMONDS){data.diamonds=HARDCODED_DIAMONDS;changed=true;}
+  // Diamonds also follow your session count: 💎5 per logged session, plus every perfect-session bonus earned
+  try{
+    var dfloor=getAllSessions().length*5+(+data.bonusDiamonds||0);
+    if(data.diamonds<dfloor){data.diamonds=dfloor;changed=true;}
+  }catch(e){}
   // Persist floor values IMMEDIATELY so UI always reflects them
   // Do this EVERY time loadXP is called to ensure the values stick
   S(SK_XP,data);
@@ -3567,6 +3572,7 @@ function addXP(amount,sourceEl){
 function addDiamonds(amount,sourceEl){
   var data=loadXP();
   data.diamonds=Math.max(0,data.diamonds+amount);
+  data.bonusDiamonds=Math.max(0,(+data.bonusDiamonds||0)+amount);
   saveXP(data);
   updateXPUI();
   if(amount>0&&sourceEl){
@@ -3574,6 +3580,12 @@ function addDiamonds(amount,sourceEl){
   }
 }
 
+// Program weeks count from Monday, Oct 26, 2026 (Phase 2, Week 1) and go up every Monday
+var PROGRAM_START=new Date(2026,9,26);
+function programWeek(){
+  var now=new Date();now.setHours(0,0,0,0);
+  return Math.max(1,Math.floor((now-PROGRAM_START)/(7*864e5))+1);
+}
 function updateXPUI(){
   var data=loadXP();
   var cur=getCurrentLevel(data.xp);
@@ -3609,7 +3621,7 @@ function updateXPUI(){
     else if(p<phase)chip.classList.add('done');
   }
   var lvlSub=document.getElementById('xp-lvl-sub');
-  if(lvlSub)lvlSub.textContent=lvlSub.textContent.replace(/Phase \d/,'Phase '+phase);
+  if(lvlSub)lvlSub.textContent='Week '+programWeek()+' · Phase '+phase+' Active';
   // Update ladder
   for(var i=1;i<=LEVELS.length;i++){
     var row=document.getElementById('ladder-'+i);
@@ -4599,6 +4611,8 @@ window.addEventListener('DOMContentLoaded',function(){
     var dateStr=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
     var shortStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
     var subEl=document.getElementById('today-date-sub');
+    var hw=document.getElementById('hero-week');
+    if(hw)hw.textContent='Prolific Partners · Week '+programWeek();
     var lblEl=document.getElementById('today-date-label');
     if(subEl)subEl.textContent=dateStr+' · 90-Min Session';
     if(lblEl)lblEl.textContent=shortStr;
