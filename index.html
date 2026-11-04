@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-04.3">
+<meta name="app-version" content="2026-11-04.4">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -3019,7 +3019,7 @@ function L(k){try{var r=localStorage.getItem(k);return r?JSON.parse(r):null;}cat
 // ═══════ HARDCODED XP BASELINE (persists through iOS wipes) ═══════
 // This is your earned XP from completed sessions, baked into the file forever.
 // Updated after each session by Claude.
-var HARDCODED_XP = 18525;      // Synced Nov 4, 2026 to the phone's XP after the Nov 4 session (18,525, LVL 7 LEGACY BUILDER, 6,475 to LVL 8)
+var HARDCODED_XP = 18750;      // Nov 4, 2026: phone's 18,525 + 225 XP for Wednesday's 9 bonus lifts, credited when bonus-lift XP was added (LVL 7 LEGACY BUILDER, 6,250 to LVL 8)
 var HARDCODED_DIAMONDS = 160;  // 32 completed sessions x 5 diamonds each
 
 // Early init: ensure XP floor is written to localStorage before any UI renders
@@ -3935,6 +3935,8 @@ function saveSession(){
   if(quickText){
     finalNotes=baseNotes?(baseNotes+'\n\n'+quickText):quickText;
   }
+  // Credit XP for logged work: bonus/alternative lifts and anything logged but not tapped on Today
+  var xpRes=awardLoggedXP(lifts,quick);
   // Also record what was checked off on the Today tab (e.g. warm-up, mobility finish),
   // which otherwise only counts toward XP and never reaches the saved session or backup
   try{
@@ -3975,7 +3977,64 @@ function saveSession(){
     if(bta2)bta2.value = nw.length ? encodeBackup(nw) : '';
     updBackupInfo();
   }catch(e){}
-  alert('✔ Session saved!\n\nNext: HISTORY tab → COPY BACKUP → paste into chat.\n\nThe backup now only includes new sessions, so it\'s short enough to paste anywhere.');
+  var xpMsg='';
+  if(xpRes.xp>0){
+    var parts2=[];
+    if(xpRes.bonus)parts2.push(xpRes.bonus+' bonus lift'+(xpRes.bonus===1?'':'s'));
+    if(xpRes.auto)parts2.push(xpRes.auto+' auto-checked on Today');
+    xpMsg='+'+xpRes.xp+' XP · '+parts2.join(', ')+'\n\n';
+  }
+  alert('✔ Session saved!\n\n'+xpMsg+'Next: HISTORY tab → COPY BACKUP → paste into chat.\n\nThe backup now only includes new sessions, so it\'s short enough to paste anywhere.');
+}
+
+// XP for logged work that has no Today tap of its own. Runs on every Save, never pays twice:
+// - Quick Log row (or core card) with real numbers that matches a Today item not yet checked: check it, pay its XP
+// - Quick Log row (or core card) with real numbers that isn't on today's plan: +25 XP bonus, once per session
+function awardLoggedXP(lifts,quick){
+  var res={bonus:0,auto:0,xp:0};
+  try{
+    if(!_currentSessId)_currentSessId='sess_'+Date.now();
+    var store=L('wash_xp_awards')||{};
+    var got=store[_currentSessId]||{};
+    var panel=document.getElementById('plan-'+currentPlan);
+    var items=panel?Array.prototype.slice.call(panel.querySelectorAll('.ex')):[];
+    function base(el){var n=el.querySelector('.ex-name');return n?n.textContent.replace(/\s*\+\d+\s*XP\s*$/,'').split(' — ')[0].trim().toLowerCase():'';}
+    function detail(el){var d=el.querySelector('.ex-detail');return d?d.textContent.toLowerCase():'';}
+    function credit(el){
+      if(el.classList.contains('done'))return;
+      tx(el);res.auto++;res.xp+=parseInt(el.getAttribute('data-xp'))||0;
+    }
+    function bonus(key){
+      if(got[key])return;
+      got[key]=1;addXP(25,null);res.bonus++;res.xp+=25;
+    }
+    function findByName(name){
+      name=(name||'').toLowerCase().trim();
+      if(!name)return null;
+      for(var i=0;i<items.length;i++){var b=base(items[i]);if(b&&(b===name||b.indexOf(name)>-1||name.indexOf(b)>-1))return items[i];}
+      return null;
+    }
+    for(var q=0;q<quick.length;q++){
+      var qx=quick[q];
+      var hasNums=(parseFloat(qx.r)>0)||String(qx.w||'').split('.').some(function(v){return +v>0;});
+      if(!hasNums)continue;
+      var it=findByName(qx.name);
+      if(it)credit(it);else bonus('q:'+qx.name.toLowerCase().trim());
+    }
+    var ALIAS={bench:['bench press'],pullup:['pull-up','chin-up','pull up','chin up'],row:['cable row'],shoulder:['shoulder press'],
+      legpress:['leg press'],bss:['split squat'],rdl:['romanian deadlift','rdl'],hipthrust:['hip thrust'],squat:['back squat','hacksaw squat']};
+    for(var l=0;l<LIFTS.length;l++){
+      var lift=LIFTS[l],st=(lifts[lift]&&lifts[lift].sets)||[];
+      var logged=false;for(var j=0;j<st.length;j++)if(+st[j].r>0){logged=true;break;}
+      if(!logged)continue;
+      var match=null,card='log on the '+LNAMES[lift].toLowerCase()+' card';
+      for(var i=0;i<items.length&&!match;i++)if(detail(items[i]).indexOf(card)>-1)match=items[i];
+      for(var i=0;i<items.length&&!match;i++){var b=base(items[i]);for(var a=0;a<ALIAS[lift].length;a++)if(b.indexOf(ALIAS[lift][a])>-1){match=items[i];break;}}
+      if(match)credit(match);else bonus('c:'+lift);
+    }
+    store[_currentSessId]=got;S('wash_xp_awards',store);
+  }catch(e){}
+  return res;
 }
 
 function restoreDraft(){
