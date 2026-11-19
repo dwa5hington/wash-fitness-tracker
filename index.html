@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-19.1">
+<meta name="app-version" content="2026-11-19.2">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -243,6 +243,30 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
 footer{text-align:center;padding:18px;font-size:.68rem;color:var(--muted);border-top:1px solid var(--mid);letter-spacing:2px;text-transform:uppercase;}
 footer span{color:var(--gold);}
 @media(max-width:580px){.app-nav{padding:0 12px;}.screen{padding:0 10px 80px;}.sets-hdr,.set-row{grid-template-columns:24px 1fr 1fr 64px 22px;gap:3px;}}
+/* ═══════ RECOVERY & ACTIVITY (Apple Health / Whoop via Shortcut) ═══════ */
+.hk-card{max-width:760px;margin:12px auto 0;background:linear-gradient(135deg,#0a0c14 0%,#121a24 100%);border:1px solid #1d3040;border-radius:14px;padding:14px 16px;}
+.hk-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;}
+.hk-ttl{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:var(--teal);}
+.hk-sync{font-size:.62rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.hk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.hk-tile{background:#0e1620;border:1px solid #1a2a38;border-radius:8px;padding:8px 10px;}
+.hk-lbl{font-size:.56rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);}
+.hk-val{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--white);letter-spacing:1px;line-height:1.1;font-variant-numeric:tabular-nums;}
+.hk-val small{font-size:.7rem;color:var(--muted);margin-left:3px;letter-spacing:0;}
+.hk-pb{margin-top:10px;font-size:.8rem;color:var(--gl);}
+.hk-empty{font-size:.72rem;color:var(--muted);margin-top:8px;}
+.hk-btns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.hk-btns .btn{flex:1;min-width:130px;}
+.btn-hk{background:#163040;color:var(--white);border:1px solid #24506a;}
+.hk-panel{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.hk-panel[hidden],.hk-empty[hidden]{display:none;}
+.hk-panel textarea{width:100%;min-height:70px;background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--white);font-size:.8rem;padding:8px;box-sizing:border-box;}
+.hk-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.hk-form label{font-size:.58rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px;}
+.hk-form input{background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--white);font-size:.95rem;padding:7px 8px;width:100%;box-sizing:border-box;}
+.hk-form .full{grid-column:1/-1;}
+.hk-msg{font-size:.75rem;color:var(--gl);min-height:1em;}
+@media (max-width:420px){.hk-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 </style>
 </head>
 <body>
@@ -281,6 +305,40 @@ footer span{color:var(--gold);}
         <div class="xp-phase-chip" id="phase-3"><div class="xp-phase-label">Phase 3</div><div class="xp-phase-name">Elite</div></div>
       </div>
     </div>
+  </div>
+
+  <!-- RECOVERY & ACTIVITY — filled from Apple Health (incl. Whoop) via the "Send to WA$H" Shortcut; stays on this phone only -->
+  <div class="hk-card" id="hk-card">
+    <div class="hk-head"><div class="hk-ttl">🫀 Recovery &amp; Activity</div><div class="hk-sync" id="hk-sync">Not synced yet</div></div>
+    <div class="hk-grid">
+      <div class="hk-tile"><div class="hk-lbl">Sleep</div><div class="hk-val" id="hk-sleep">—</div></div>
+      <div class="hk-tile"><div class="hk-lbl">Resting HR</div><div class="hk-val" id="hk-rhr">—</div></div>
+      <div class="hk-tile"><div class="hk-lbl">HRV</div><div class="hk-val" id="hk-hrv">—</div></div>
+      <div class="hk-tile"><div class="hk-lbl">Steps</div><div class="hk-val" id="hk-steps">—</div></div>
+      <div class="hk-tile"><div class="hk-lbl">Active Cal</div><div class="hk-val" id="hk-cal">—</div></div>
+      <div class="hk-tile"><div class="hk-lbl">VO2 Max</div><div class="hk-val" id="hk-vo2">—</div></div>
+    </div>
+    <div class="hk-pb" id="hk-pb">🏓 Pickleball this week: none yet</div>
+    <div class="hk-empty" id="hk-empty">Run your <strong>Send to WA$H</strong> shortcut, then tap <strong>Sync Health</strong>.</div>
+    <div class="hk-btns">
+      <button class="btn btn-hk" type="button" id="hk-sync-btn" onclick="hkSyncTap()">⤓ Sync Health</button>
+      <button class="btn btn-sv" type="button" id="hk-pb-btn" onclick="hkTogglePb()">🏓 Log Pickleball</button>
+    </div>
+    <div class="hk-panel" id="hk-paste-panel" hidden>
+      <textarea id="hk-paste" placeholder="Paste what the Send to WA$H shortcut copied (starts with WASH_HEALTH::)"></textarea>
+      <button class="btn btn-sv" type="button" id="hk-import-btn" onclick="hkImportFromBox()">Import</button>
+    </div>
+    <div class="hk-panel" id="hk-pb-panel" hidden>
+      <div class="hk-form">
+        <label>Date<input type="date" id="pb-date"></label>
+        <label>Minutes<input type="number" inputmode="numeric" id="pb-min" placeholder="90"></label>
+        <label>Calories<input type="number" inputmode="numeric" id="pb-cal" placeholder="650"></label>
+        <label>Avg heart rate<input type="number" inputmode="numeric" id="pb-hr" placeholder="130"></label>
+        <label class="full">Notes<input type="text" id="pb-note" placeholder="Doubles at the rec center, 6 games"></label>
+      </div>
+      <button class="btn btn-sv" type="button" id="pb-save-btn" onclick="hkSavePbForm()">Save pickleball session · +50 XP</button>
+    </div>
+    <div class="hk-msg" id="hk-msg" aria-live="polite"></div>
   </div>
 
   <div class="today-hero">
@@ -4796,6 +4854,152 @@ window.addEventListener('DOMContentLoaded',function(){
     }catch(e){console.log('initial backup pop err:',e);}
   }catch(e){}
 });
+
+// ═══════ RECOVERY & ACTIVITY + PICKLEBALL ═══════
+// Daily health numbers come from Apple Health (Whoop writes into it) through the iPhone Shortcut
+// "Send to WA$H", which copies a line like:
+//   WASH_HEALTH::date=2026-11-19;steps=8423;cal=612;sleep=7.2;rhr=52;hrv=68;vo2=46.1;pb=95/640/128
+// (pb = pickleball minutes/calories/avg HR, optional). JSON works too. Health numbers stay on this
+// phone (localStorage) and are never added to the app file or the backup. Pickleball sessions are
+// saved as normal sessions (History + backup) and earn +50 XP once each.
+var SK_HK='wash_health_v1';
+function hkToday(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function hkNum(v){if(v===undefined||v===null||v==='')return null;var n=parseFloat(String(v).replace(/,/g,'').replace(/[^0-9.\-]/g,''));return isNaN(n)?null:n;}
+function hkLoad(){var d=L(SK_HK)||{};if(!d.days)d.days={};return d;}
+function hkParse(text){
+  var t=String(text||'').trim();
+  var i=t.indexOf('WASH_HEALTH::');
+  if(i>-1)t=t.slice(i+13).trim();
+  var o={};
+  if(/^[\{]/.test(t)){try{o=JSON.parse(t);}catch(e){return null;}}
+  else{
+    var parts=t.split(/[;&\n]+/);
+    for(var k=0;k<parts.length;k++){var kv=parts[k].split('=');if(kv.length<2)continue;o[kv[0].trim().toLowerCase()]=kv.slice(1).join('=').trim();}
+  }
+  var date=/^\d{4}-\d{2}-\d{2}$/.test(o.date||'')?o.date:hkToday();
+  var day={};
+  var steps=hkNum(o.steps),cal=hkNum(o.cal!==undefined?o.cal:o.activecal),sleep=hkNum(o.sleep!==undefined?o.sleep:o.sleephrs),
+      rhr=hkNum(o.rhr),hrv=hkNum(o.hrv),vo2=hkNum(o.vo2);
+  if(sleep!==null&&sleep>24)sleep=sleep/60;           // minutes → hours
+  if(steps!==null)day.steps=Math.round(steps);
+  if(cal!==null)day.cal=Math.round(cal);
+  if(sleep!==null)day.sleep=Math.round(sleep*10)/10;
+  if(rhr!==null)day.rhr=Math.round(rhr);
+  if(hrv!==null)day.hrv=Math.round(hrv);
+  if(vo2!==null)day.vo2=Math.round(vo2*10)/10;
+  var pbs=[],pbList=o.pickleball||o.workouts||(o.pb?String(o.pb).split(','):[]);
+  for(var p=0;p<pbList.length;p++){
+    var x=pbList[p],min,pcal,hr;
+    if(typeof x==='object'){min=hkNum(x.min||x.minutes);pcal=hkNum(x.cal||x.calories);hr=hkNum(x.hr||x.avgHR);}
+    else{var f=String(x).split('/');min=hkNum(f[0]);pcal=hkNum(f[1]);hr=hkNum(f[2]);}
+    if(min)pbs.push({date:date,min:Math.round(min),cal:pcal===null?null:Math.round(pcal),hr:hr===null?null:Math.round(hr)});
+  }
+  if(!Object.keys(day).length&&!pbs.length)return null;
+  return {date:date,day:day,pickleball:pbs};
+}
+function hkImport(text){
+  var r=hkParse(text);
+  if(!r)return {ok:false};
+  var d=hkLoad();
+  var prev=d.days[r.date]||{};
+  for(var k in r.day)prev[k]=r.day[k];
+  d.days[r.date]=prev;d.lastSync=new Date().toISOString();
+  var keys=Object.keys(d.days).sort();while(keys.length>30){delete d.days[keys.shift()];}
+  S(SK_HK,d);
+  var added=0;
+  for(var i=0;i<r.pickleball.length;i++)if(hkAddPickleball(r.pickleball[i]))added++;
+  renderHealth();
+  return {ok:true,date:r.date,metrics:Object.keys(r.day).length,pickleball:added};
+}
+// Saves a pickleball session into History (like a gym session) and pays +50 XP once
+function hkAddPickleball(pb){
+  if(!pb||!pb.min)return false;
+  var id='pb_'+pb.date.replace(/-/g,'')+'_'+pb.min+'_'+(pb.cal||0);
+  var saved=L(SK)||{sessions:[]};if(!saved.sessions)saved.sessions=[];
+  for(var i=0;i<saved.sessions.length;i++)if(saved.sessions[i].id===id)return false;
+  var dt=new Date(pb.date+'T12:00:00');
+  var bits=['Pickleball '+pb.min+' min'];
+  if(pb.cal)bits.push(pb.cal+' cal');
+  if(pb.hr)bits.push('avg HR '+pb.hr);
+  var notes=bits.join(' · ')+(pb.note?' — '+pb.note:'');
+  var empty={};for(var l=0;l<LIFTS.length;l++)empty[LIFTS[l]]={sets:[],note:''};
+  saved.sessions.unshift({id:id,date:dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}),
+    type:'PICKLEBALL',lifts:empty,notes:notes,pickleball:{min:pb.min,cal:pb.cal||null,hr:pb.hr||null}});
+  S(SK,saved);
+  try{
+    var store=L('wash_xp_awards')||{};var got=store[id]||{};
+    if(!got.pb){got.pb=1;store[id]=got;S('wash_xp_awards',store);addXP(50,document.getElementById('hk-pb-btn'));}
+  }catch(e){}
+  try{renderPrevs();var bta=document.getElementById('backup-ta');var nw=getNewSessions();if(bta)bta.value=nw.length?encodeBackup(nw):'';updBackupInfo();}catch(e){}
+  return true;
+}
+function hkWeekPickleball(){
+  var now=new Date();now.setHours(0,0,0,0);
+  var monday=new Date(now);monday.setDate(now.getDate()-((now.getDay()+6)%7));
+  var out={n:0,min:0,cal:0},all=getAllSessions();
+  for(var i=0;i<all.length;i++){
+    var s=all[i];if(s.type!=='PICKLEBALL')continue;
+    var d=new Date(s.date);if(isNaN(d)||d<monday)continue;
+    out.n++;var m=(s.notes||'').match(/(\d+) min/),c=(s.notes||'').match(/(\d+) cal/);
+    if(m)out.min+=+m[1];if(c)out.cal+=+c[1];
+  }
+  return out;
+}
+function renderHealth(){
+  try{
+    var d=hkLoad(),keys=Object.keys(d.days).sort(),day=keys.length?d.days[keys[keys.length-1]]:null;
+    function set(id,v,unit){var el=document.getElementById(id);if(!el)return;el.innerHTML=(v===undefined||v===null)?'—':(Number(v).toLocaleString()+(unit?'<small>'+unit+'</small>':''));}
+    set('hk-sleep',day&&day.sleep,'h');set('hk-rhr',day&&day.rhr,'bpm');set('hk-hrv',day&&day.hrv,'ms');
+    set('hk-steps',day&&day.steps,'');set('hk-cal',day&&day.cal,'');set('hk-vo2',day&&day.vo2,'');
+    var sy=document.getElementById('hk-sync');
+    if(sy)sy.textContent=day?('Data for '+new Date(keys[keys.length-1]+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})):'Not synced yet';
+    var em=document.getElementById('hk-empty');if(em)em.hidden=!!day;
+    var w=hkWeekPickleball(),pbEl=document.getElementById('hk-pb');
+    if(pbEl)pbEl.textContent=w.n?('🏓 Pickleball this week: '+w.n+' session'+(w.n===1?'':'s')+' · '+w.min+' min'+(w.cal?' · '+w.cal.toLocaleString()+' cal':'')):'🏓 Pickleball this week: none yet';
+  }catch(e){}
+}
+function hkMsg(t){var m=document.getElementById('hk-msg');if(m)m.textContent=t;}
+function hkReport(r){
+  if(!r.ok){hkMsg('That doesn’t look like Send to WA$H data. Run the shortcut again, then paste.');return;}
+  var parts=[];if(r.metrics)parts.push(r.metrics+' health number'+(r.metrics===1?'':'s'));
+  if(r.pickleball)parts.push(r.pickleball+' pickleball session'+(r.pickleball===1?'':'s')+' (+'+(r.pickleball*50)+' XP)');
+  hkMsg('✅ Synced '+(parts.join(' and ')||'nothing new')+'.');
+}
+function hkSyncTap(){
+  var panel=document.getElementById('hk-paste-panel');
+  function showBox(){if(panel){panel.hidden=false;var ta=document.getElementById('hk-paste');if(ta)ta.focus();}hkMsg('Paste the shortcut’s text into the box, then tap Import.');}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.readText){
+      navigator.clipboard.readText().then(function(t){
+        if(t&&t.indexOf('WASH_HEALTH::')>-1){hkReport(hkImport(t));if(panel)panel.hidden=true;}else showBox();
+      },showBox);
+      return;
+    }
+  }catch(e){}
+  showBox();
+}
+function hkImportFromBox(){
+  var ta=document.getElementById('hk-paste');var r=hkImport(ta?ta.value:'');hkReport(r);
+  if(r.ok){ta.value='';document.getElementById('hk-paste-panel').hidden=true;}
+}
+function hkTogglePb(){
+  var p=document.getElementById('hk-pb-panel');if(!p)return;p.hidden=!p.hidden;
+  var dt=document.getElementById('pb-date');if(dt&&!dt.value)dt.value=hkToday();
+}
+function hkSavePbForm(){
+  var min=hkNum(document.getElementById('pb-min').value);
+  if(!min){hkMsg('Enter how many minutes you played.');return;}
+  var pb={date:document.getElementById('pb-date').value||hkToday(),min:Math.round(min),
+    cal:hkNum(document.getElementById('pb-cal').value),hr:hkNum(document.getElementById('pb-hr').value),
+    note:(document.getElementById('pb-note').value||'').trim().replace(/'/g,'’')};
+  if(pb.cal!==null)pb.cal=Math.round(pb.cal);if(pb.hr!==null)pb.hr=Math.round(pb.hr);
+  if(hkAddPickleball(pb)){
+    ['pb-min','pb-cal','pb-hr','pb-note'].forEach(function(i){document.getElementById(i).value='';});
+    document.getElementById('hk-pb-panel').hidden=true;renderHealth();
+    hkMsg('✅ Pickleball saved to History · +50 XP');
+  }else hkMsg('That session is already saved.');
+}
+window.addEventListener('DOMContentLoaded',renderHealth);
 
 // ═══════ AUTO UPDATE CHECK ═══════
 // Home Screen apps can keep running an old saved copy. On open (and when the app comes
