@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-19.2">
+<meta name="app-version" content="2026-11-20.1">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -266,6 +266,13 @@ footer span{color:var(--gold);}
 .hk-form input{background:#0e0e18;border:1px solid #1a2040;border-radius:6px;color:var(--white);font-size:.95rem;padding:7px 8px;width:100%;box-sizing:border-box;}
 .hk-form .full{grid-column:1/-1;}
 .hk-msg{font-size:.75rem;color:var(--gl);min-height:1em;}
+.pb-hint{font-size:.7rem;color:var(--muted);}
+.pb-rows{display:flex;flex-direction:column;gap:8px;}
+.pb-row{background:#0e1620;border:1px solid #1a2a38;border-radius:8px;padding:8px 10px;}
+.pb-row-head{display:flex;justify-content:space-between;align-items:center;font-size:.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--teal);margin-bottom:6px;}
+.pb-row-head button{background:none;border:none;color:var(--muted);font-size:.7rem;cursor:pointer;padding:2px 6px;}
+.pb-row .hk-form{grid-template-columns:repeat(3,minmax(0,1fr));}
+.pb-total{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--gold-l);min-height:1.2em;}
 @media (max-width:420px){.hk-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 </style>
 </head>
@@ -330,13 +337,16 @@ footer span{color:var(--gold);}
     </div>
     <div class="hk-panel" id="hk-pb-panel" hidden>
       <div class="hk-form">
-        <label>Date<input type="date" id="pb-date"></label>
-        <label>Minutes<input type="number" inputmode="numeric" id="pb-min" placeholder="90"></label>
-        <label>Calories<input type="number" inputmode="numeric" id="pb-cal" placeholder="650"></label>
-        <label>Avg heart rate<input type="number" inputmode="numeric" id="pb-hr" placeholder="130"></label>
+        <label class="full">Date<input type="date" id="pb-date"></label>
+      </div>
+      <div class="pb-hint">Enter each Whoop session as it shows. The app adds them up into one pickleball session.</div>
+      <div id="pb-rows" class="pb-rows"></div>
+      <button class="btn btn-hk" type="button" id="pb-add-row" onclick="hkPbAddRow()">＋ Add another session</button>
+      <div class="pb-total" id="pb-total" aria-live="polite"></div>
+      <div class="hk-form">
         <label class="full">Notes<input type="text" id="pb-note" placeholder="Doubles at the rec center, 6 games"></label>
       </div>
-      <button class="btn btn-sv" type="button" id="pb-save-btn" onclick="hkSavePbForm()">Save pickleball session · +50 XP</button>
+      <button class="btn btn-sv" type="button" id="pb-save-btn" onclick="hkSavePbForm()">Save pickleball · +50 XP</button>
     </div>
     <div class="hk-msg" id="hk-msg" aria-live="polite"></div>
   </div>
@@ -4906,32 +4916,65 @@ function hkImport(text){
   d.days[r.date]=prev;d.lastSync=new Date().toISOString();
   var keys=Object.keys(d.days).sort();while(keys.length>30){delete d.days[keys.shift()];}
   S(SK_HK,d);
-  var added=0;
-  for(var i=0;i<r.pickleball.length;i++)if(hkAddPickleball(r.pickleball[i]))added++;
+  var added=0,byDate={};
+  for(var i=0;i<r.pickleball.length;i++){var pb=r.pickleball[i];(byDate[pb.date]=byDate[pb.date]||[]).push(pb);}
+  for(var dd in byDate){var res=hkAddPickleball({date:dd,bouts:byDate[dd]});if(res.status==='added'||res.status==='merged')added++;}
   renderHealth();
   return {ok:true,date:r.date,metrics:Object.keys(r.day).length,pickleball:added};
 }
-// Saves a pickleball session into History (like a gym session) and pays +50 XP once
-function hkAddPickleball(pb){
-  if(!pb||!pb.min)return false;
-  var id='pb_'+pb.date.replace(/-/g,'')+'_'+pb.min+'_'+(pb.cal||0);
+// One pickleball session per day in History. Whoop often splits a night into several sessions
+// (bouts); they are combined here: minutes and calories add up, average HR is weighted by minutes.
+// Logging more pickleball for a date that already has a session adds to it. +50 XP once per day.
+function hkPbTotals(bouts){
+  var t={min:0,cal:0,hasCal:false,hrW:0,hrMin:0};
+  for(var i=0;i<bouts.length;i++){
+    var b=bouts[i];t.min+=b.min||0;
+    if(b.cal!==null&&b.cal!==undefined){t.cal+=b.cal;t.hasCal=true;}
+    if(b.hr){t.hrW+=b.hr*b.min;t.hrMin+=b.min;}
+  }
+  return {min:t.min,cal:t.hasCal?t.cal:null,hr:t.hrMin?Math.round(t.hrW/t.hrMin):null,n:bouts.length};
+}
+function hkAddPickleball(entry){
+  // entry: {date, bouts:[{min,cal,hr}], note}  (a single {date,min,cal,hr,note} also works)
+  if(!entry)return {status:'none'};
+  var bouts=entry.bouts||[{min:entry.min,cal:entry.cal,hr:entry.hr}];
+  bouts=bouts.filter(function(b){return b&&b.min>0;}).map(function(b){return {min:Math.round(b.min),cal:(b.cal===null||b.cal===undefined)?null:Math.round(b.cal),hr:b.hr?Math.round(b.hr):null};});
+  if(!bouts.length)return {status:'none'};
+  var dt=new Date(entry.date+'T12:00:00');
+  var dateStr=dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
   var saved=L(SK)||{sessions:[]};if(!saved.sessions)saved.sessions=[];
-  for(var i=0;i<saved.sessions.length;i++)if(saved.sessions[i].id===id)return false;
-  var dt=new Date(pb.date+'T12:00:00');
-  var bits=['Pickleball '+pb.min+' min'];
-  if(pb.cal)bits.push(pb.cal+' cal');
-  if(pb.hr)bits.push('avg HR '+pb.hr);
-  var notes=bits.join(' · ')+(pb.note?' — '+pb.note:'');
-  var empty={};for(var l=0;l<LIFTS.length;l++)empty[LIFTS[l]]={sets:[],note:''};
-  saved.sessions.unshift({id:id,date:dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}),
-    type:'PICKLEBALL',lifts:empty,notes:notes,pickleball:{min:pb.min,cal:pb.cal||null,hr:pb.hr||null}});
+  var sess=null;
+  for(var i=0;i<saved.sessions.length;i++){var x=saved.sessions[i];if(x.type==='PICKLEBALL'&&x.date===dateStr){sess=x;break;}}
+  var status='added',sig=function(b){return b.min+'/'+b.cal+'/'+b.hr;};
+  if(sess){
+    var pbd=sess.pickleball||{};
+    var have=pbd.bouts||(pbd.min?[{min:pbd.min,cal:pbd.cal||null,hr:pbd.hr||null}]:[]);
+    var seen={};have.forEach(function(b){seen[sig(b)]=1;});
+    var fresh=bouts.filter(function(b){return !seen[sig(b)];});
+    if(!fresh.length)return {status:'dupe'};
+    bouts=have.concat(fresh);status='merged';
+  }else{
+    var empty={};for(var l=0;l<LIFTS.length;l++)empty[LIFTS[l]]={sets:[],note:''};
+    sess={id:'pb_'+entry.date.replace(/-/g,''),date:dateStr,type:'PICKLEBALL',lifts:empty,notes:'',pickleball:{}};
+    saved.sessions.unshift(sess);
+  }
+  var notesList=(sess.pickleball&&sess.pickleball.notes)?sess.pickleball.notes.slice():[];
+  if(entry.note&&notesList.indexOf(entry.note)<0)notesList.push(entry.note);
+  var t=hkPbTotals(bouts);
+  var bits=['Pickleball '+t.min+' min'];
+  if(t.cal!==null)bits.push(t.cal+' cal');
+  if(t.hr)bits.push('avg HR '+t.hr);
+  if(t.n>1)bits.push(t.n+' sessions combined');
+  sess.notes=bits.join(' · ')+(notesList.length?' — '+notesList.join('; '):'');
+  sess.pickleball={min:t.min,cal:t.cal,hr:t.hr,bouts:bouts,notes:notesList};
   S(SK,saved);
+  var xp=0;
   try{
-    var store=L('wash_xp_awards')||{};var got=store[id]||{};
-    if(!got.pb){got.pb=1;store[id]=got;S('wash_xp_awards',store);addXP(50,document.getElementById('hk-pb-btn'));}
+    var store=L('wash_xp_awards')||{};var got=store[sess.id]||{};
+    if(!got.pb){got.pb=1;store[sess.id]=got;S('wash_xp_awards',store);addXP(50,document.getElementById('hk-pb-btn'));xp=50;}
   }catch(e){}
   try{renderPrevs();var bta=document.getElementById('backup-ta');var nw=getNewSessions();if(bta)bta.value=nw.length?encodeBackup(nw):'';updBackupInfo();}catch(e){}
-  return true;
+  return {status:status,xp:xp,totals:t};
 }
 function hkWeekPickleball(){
   var now=new Date();now.setHours(0,0,0,0);
@@ -4962,7 +5005,7 @@ function hkMsg(t){var m=document.getElementById('hk-msg');if(m)m.textContent=t;}
 function hkReport(r){
   if(!r.ok){hkMsg('That doesn’t look like Send to WA$H data. Run the shortcut again, then paste.');return;}
   var parts=[];if(r.metrics)parts.push(r.metrics+' health number'+(r.metrics===1?'':'s'));
-  if(r.pickleball)parts.push(r.pickleball+' pickleball session'+(r.pickleball===1?'':'s')+' (+'+(r.pickleball*50)+' XP)');
+  if(r.pickleball)parts.push('pickleball');
   hkMsg('✅ Synced '+(parts.join(' and ')||'nothing new')+'.');
 }
 function hkSyncTap(){
@@ -4982,22 +5025,58 @@ function hkImportFromBox(){
   var ta=document.getElementById('hk-paste');var r=hkImport(ta?ta.value:'');hkReport(r);
   if(r.ok){ta.value='';document.getElementById('hk-paste-panel').hidden=true;}
 }
+function hkPbAddRow(){
+  var rows=document.getElementById('pb-rows');if(!rows)return;
+  var n=rows.children.length+1;
+  var r=document.createElement('div');r.className='pb-row';
+  r.innerHTML='<div class="pb-row-head"><span>Session '+n+'</span>'+(n>1?'<button type="button" aria-label="Remove session '+n+'">✕ Remove</button>':'')+'</div>'+
+    '<div class="hk-form"><label>Minutes<input type="number" inputmode="numeric" class="pb-min" placeholder="118"></label>'+
+    '<label>Calories<input type="number" inputmode="numeric" class="pb-cal" placeholder="466"></label>'+
+    '<label>Avg HR<input type="number" inputmode="numeric" class="pb-hr" placeholder="107"></label></div>';
+  var rm=r.querySelector('button');
+  if(rm)rm.addEventListener('click',function(){r.parentNode.removeChild(r);hkPbRenumber();hkPbTotal();});
+  r.addEventListener('input',hkPbTotal);
+  rows.appendChild(r);hkPbTotal();
+  var first=r.querySelector('.pb-min');if(first&&n>1)first.focus();
+}
+function hkPbRenumber(){
+  var rows=document.querySelectorAll('#pb-rows .pb-row');
+  for(var i=0;i<rows.length;i++){rows[i].querySelector('.pb-row-head span').textContent='Session '+(i+1);}
+}
+function hkPbBouts(){
+  var out=[],rows=document.querySelectorAll('#pb-rows .pb-row');
+  for(var i=0;i<rows.length;i++){
+    var min=hkNum(rows[i].querySelector('.pb-min').value);
+    if(!min)continue;
+    out.push({min:min,cal:hkNum(rows[i].querySelector('.pb-cal').value),hr:hkNum(rows[i].querySelector('.pb-hr').value)});
+  }
+  return out;
+}
+function hkPbTotal(){
+  var el=document.getElementById('pb-total');if(!el)return;
+  var b=hkPbBouts();
+  if(!b.length){el.textContent='';return;}
+  var t=hkPbTotals(b.map(function(x){return {min:Math.round(x.min),cal:x.cal===null?null:Math.round(x.cal),hr:x.hr?Math.round(x.hr):null};}));
+  el.textContent='Total: '+t.min+' min'+(t.cal!==null?' · '+t.cal.toLocaleString()+' cal':'')+(t.hr?' · avg HR '+t.hr:'')+(t.n>1?' ('+t.n+' sessions)':'');
+}
 function hkTogglePb(){
   var p=document.getElementById('hk-pb-panel');if(!p)return;p.hidden=!p.hidden;
   var dt=document.getElementById('pb-date');if(dt&&!dt.value)dt.value=hkToday();
+  var rows=document.getElementById('pb-rows');if(rows&&!rows.children.length)hkPbAddRow();
 }
 function hkSavePbForm(){
-  var min=hkNum(document.getElementById('pb-min').value);
-  if(!min){hkMsg('Enter how many minutes you played.');return;}
-  var pb={date:document.getElementById('pb-date').value||hkToday(),min:Math.round(min),
-    cal:hkNum(document.getElementById('pb-cal').value),hr:hkNum(document.getElementById('pb-hr').value),
+  var bouts=hkPbBouts();
+  if(!bouts.length){hkMsg('Enter the minutes for at least one session.');return;}
+  var entry={date:document.getElementById('pb-date').value||hkToday(),bouts:bouts,
     note:(document.getElementById('pb-note').value||'').trim().replace(/'/g,'’')};
-  if(pb.cal!==null)pb.cal=Math.round(pb.cal);if(pb.hr!==null)pb.hr=Math.round(pb.hr);
-  if(hkAddPickleball(pb)){
-    ['pb-min','pb-cal','pb-hr','pb-note'].forEach(function(i){document.getElementById(i).value='';});
-    document.getElementById('hk-pb-panel').hidden=true;renderHealth();
-    hkMsg('✅ Pickleball saved to History · +50 XP');
-  }else hkMsg('That session is already saved.');
+  var res=hkAddPickleball(entry);
+  if(res.status==='dupe'){hkMsg('Those sessions are already saved for that date.');return;}
+  if(res.status==='none'){hkMsg('Enter the minutes for at least one session.');return;}
+  var rows=document.getElementById('pb-rows');rows.innerHTML='';
+  document.getElementById('pb-note').value='';document.getElementById('pb-total').textContent='';
+  document.getElementById('hk-pb-panel').hidden=true;renderHealth();
+  var t=res.totals,sum=t.min+' min'+(t.cal!==null?' · '+t.cal.toLocaleString()+' cal':'')+(t.hr?' · avg HR '+t.hr:'');
+  hkMsg(res.status==='merged'?('✅ Added to that day’s pickleball, now '+sum):('✅ Pickleball saved to History ('+sum+') · +'+res.xp+' XP'));
 }
 window.addEventListener('DOMContentLoaded',renderHealth);
 
