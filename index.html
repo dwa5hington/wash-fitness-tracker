@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-20.2">
+<meta name="app-version" content="2026-11-20.3">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -248,7 +248,7 @@ footer span{color:var(--gold);}
 .hk-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;}
 .hk-ttl{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:var(--teal);}
 .hk-sync{font-size:.62rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-.hk-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.hk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
 .hk-tile{background:#0e1620;border:1px solid #1a2a38;border-radius:8px;padding:8px 10px;}
 .hk-lbl{font-size:.56rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);}
 .hk-val{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--white);letter-spacing:1px;line-height:1.1;font-variant-numeric:tabular-nums;}
@@ -320,10 +320,8 @@ footer span{color:var(--gold);}
     <div class="hk-grid">
       <div class="hk-tile"><div class="hk-lbl">Sleep</div><div class="hk-val" id="hk-sleep">—</div></div>
       <div class="hk-tile"><div class="hk-lbl">Resting HR</div><div class="hk-val" id="hk-rhr">—</div></div>
-      <div class="hk-tile"><div class="hk-lbl">HRV</div><div class="hk-val" id="hk-hrv">—</div></div>
       <div class="hk-tile"><div class="hk-lbl">Steps</div><div class="hk-val" id="hk-steps">—</div></div>
       <div class="hk-tile"><div class="hk-lbl">Active Cal</div><div class="hk-val" id="hk-cal">—</div></div>
-      <div class="hk-tile"><div class="hk-lbl">VO2 Max</div><div class="hk-val" id="hk-vo2">—</div></div>
     </div>
     <div class="hk-pb" id="hk-pb">🏓 Pickleball this week: none yet</div>
     <div class="hk-empty" id="hk-empty">Run your <strong>Send to WA$H</strong> shortcut, then tap <strong>Sync Health</strong>.</div>
@@ -4993,8 +4991,8 @@ function renderHealth(){
   try{
     var d=hkLoad(),keys=Object.keys(d.days).sort(),day=keys.length?d.days[keys[keys.length-1]]:null;
     function set(id,v,unit){var el=document.getElementById(id);if(!el)return;el.innerHTML=(v===undefined||v===null)?'—':(Number(v).toLocaleString()+(unit?'<small>'+unit+'</small>':''));}
-    set('hk-sleep',day&&day.sleep,'h');set('hk-rhr',day&&day.rhr,'bpm');set('hk-hrv',day&&day.hrv,'ms');
-    set('hk-steps',day&&day.steps,'');set('hk-cal',day&&day.cal,'');set('hk-vo2',day&&day.vo2,'');
+    set('hk-sleep',day&&day.sleep,'h');set('hk-rhr',day&&day.rhr,'bpm');
+    set('hk-steps',day&&day.steps,'');set('hk-cal',day&&day.cal,'');
     var sy=document.getElementById('hk-sync');
     if(sy)sy.textContent=day?('Data for '+new Date(keys[keys.length-1]+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})):'Not synced yet';
     var em=document.getElementById('hk-empty');if(em)em.hidden=!!day;
