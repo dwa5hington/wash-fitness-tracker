@@ -6,7 +6,7 @@
 <title>Wa$h Fitness Tracker — Mr. Washington</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="WA$H">
-<meta name="app-version" content="2026-11-20.3">
+<meta name="app-version" content="2026-11-25.1">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--black:#020305;--white:#f2f0ff;--gray:#0a0c14;--mid:#14182a;--deep:#06070f;--muted:#484a68;--gold:#d4a843;--gold-l:#f0c96a;--gold-d:#5a3c08;--green:#4caf7d;--gl:#a8f5b8;--gd:#1a3a22;--red:#e04848;--blue-l:#80c0ff;--purple:#9b72d0;--teal:#3aada8;--amber:#e09030;--orange:#e06828;}
@@ -358,7 +358,8 @@ footer span{color:var(--gold);}
   <div style="max-width:760px;margin:18px auto 0;">
     <div style="font-size:.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:10px;">Choose Today's Plan</div>
     <select class="plan-dd" id="plan-dropdown" onchange="setPlan(this.value)">
-      <option value="tue-nov17-upper-focus-6040" selected>💪🔄 Tue Nov 17 · Upper Focus 60/40 · 60 Min</option>
+      <option value="wed-nov25-fullbody-pickleball-primer" selected>🏓💪 Wed Nov 25 · Full Body · Pickleball Primer · 60 Min</option>
+      <option value="tue-nov17-upper-focus-6040">💪🔄 Tue Nov 17 · Upper Focus 60/40 · 60 Min</option>
       <option value="mon-nov16-comeback-lower-6040">🦵🔄 Mon Nov 16 · Comeback Day · Lower Focus 60/40 · 60 Min</option>
       <option value="wed-nov4-fullbody-mobility-strength-2">🧘💪 Wed Nov 4 · Full Body · Mobility Strength II · 60 Min</option>
       <option value="tue-nov3-fullbody-mobility-strength">💪🧘 Tue Nov 3 · Full Body · Mobility Strength · 60 Min</option>
@@ -433,7 +434,50 @@ footer span{color:var(--gold);}
   <!-- TUE DYNAMIC UPPER (majority upper, light lower touches, core + cardio) -->
   <!-- MON APR 27 FULL BODY · LOWER FOCUS · 75 min · solid intensity -->
   <!-- TUE NOV 17 UPPER FOCUS · 60/40 · 60 MIN -->
-  <div class="plan-panel active" id="plan-tue-nov17-upper-focus-6040">
+  <!-- WED NOV 25 FULL BODY · PICKLEBALL PRIMER · 60 MIN -->
+  <div class="plan-panel active" id="plan-wed-nov25-fullbody-pickleball-primer">
+    <h2 style="color:#00d4ff;margin:0 0 10px 0;">🏓💪 Wednesday, November 25 — Full Body · Pickleball Primer</h2>
+    <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">Full Body · 60 Minutes · Mobility + Core + Flexibility</p>
+    <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Pickleball tonight, so every set stops 2–3 reps short and the leg work stays moderate. Hips, thoracic spine, ankles and shoulders get the attention. Log RDL on its core lift card; everything else goes in Quick Log. Warm up again for 3–5 minutes before you step on the court.</p>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Warm-up</div><div class="ph-time">0–7 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Easy Cardio + Dynamic Prime <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Air bike or incline walk 5 min easy | Arm circles ×10 each way | Leg swings ×10 front-to-back and ×10 side-to-side each leg</div><div class="ex-tags"><span class="tag t-cardio">Cardio</span><span class="tag t-mobility">Mobility</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Mobility Circuit — 2 Rounds</div><div class="ph-time">7–17 min</div></div>
+      <div class="ex" data-xp="20" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Mobility Circuit <span class="xp-badge">+20 XP</span></div><div class="ex-detail">90/90 hip switches ×8 each side | World's Greatest Stretch ×5 each side | Quadruped thoracic rotations ×8 each side | Wall ankle rocks ×10 each side</div><div class="ex-tags"><span class="tag t-mobility">Mobility</span><span class="tag t-flexibility">Flexibility</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🦵</span><div class="ph-name">Superset A — Squat + Row</div><div class="ph-time">17–27 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Goblet Squat — 3 × 8 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">50 → 55 → 60 lb | 3-sec lowering, full depth | Stop 2–3 reps short</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="40" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Single-Arm DB Row — 3 × 10 each side <span class="xp-badge">+40 XP</span></div><div class="ex-detail">55 → 60 → 65 | Squeeze at the top, no torso twist</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🏋️</span><div class="ph-name">Superset B — Hinge + Press</div><div class="ph-time">27–37 min</div></div>
+      <div class="ex" data-xp="45" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">DB Romanian Deadlift — 3 × 8 <span class="xp-badge">+45 XP</span></div><div class="ex-detail">50 → 55 → 60 lb each hand | Long hamstring stretch | Log on the RDL card</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="40" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Incline DB Press — 3 × 10 <span class="xp-badge">+40 XP</span></div><div class="ex-detail">60 → 65 → 70 | 2-sec stretch at the bottom</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🎯</span><div class="ph-name">Superset C — Lateral + Pull + Shoulders</div><div class="ph-time">37–46 min</div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cossack (Lateral) Lunge — 2 × 6 each side <span class="xp-badge">+35 XP</span></div><div class="ex-detail">Bodyweight → 15 lb goblet | Sit deep, toes of the straight leg up</div><div class="ex-tags"><span class="tag t-lower">Lower</span><span class="tag t-mobility">Mobility</span></div></div></div>
+      <div class="ex" data-xp="35" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Half-Kneeling Cable Pulldown — 3 × 10 each arm <span class="xp-badge">+35 XP</span></div><div class="ex-detail">Start light, then 40 → 45 → 50 | Ribs down, no leaning back</div><div class="ex-tags"><span class="tag t-upper">Upper</span></div></div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Cable Face Pull — 2 × 15 <span class="xp-badge">+25 XP</span></div><div class="ex-detail">30 → 35 | Pull apart and hold 1 sec</div><div class="ex-tags"><span class="tag t-upper">Upper</span><span class="tag t-shoulder">Shoulder</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🔥</span><div class="ph-name">Core</div><div class="ph-time">46–54 min</div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Pallof Press — 3 × 10 each side <span class="xp-badge">+30 XP</span></div><div class="ex-detail">28 → 33 | Hold 2 sec at full extension</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="30" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Hanging Knee Raise — 3 × 10 <span class="xp-badge">+30 XP</span></div><div class="ex-detail">Bodyweight → 10 lb | No swinging</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+      <div class="ex" data-xp="25" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Side Plank with Reach — 2 × 30 sec each side <span class="xp-badge">+25 XP</span></div><div class="ex-detail">Thread the top arm under, hips high</div><div class="ex-tags"><span class="tag t-abs">Abs</span><span class="tag t-core">Core</span></div></div></div>
+    </div>
+
+    <div class="phase"><div class="ph-hdr"><span>🧘</span><div class="ph-name">Flexibility Finish</div><div class="ph-time">54–60 min</div></div>
+      <div class="ex" data-xp="10" onclick="tx(this)"><div class="ex-chk">✓</div><div class="ex-body"><div class="ex-name">Flexibility Finish <span class="xp-badge">+10 XP</span></div><div class="ex-detail">Half-kneeling hip flexor stretch 45 sec each side | Figure-4 or pigeon 45 sec each side | Standing hamstring stretch 45 sec each side | Cross-body shoulder stretch 30 sec each side | Child's pose with side reach 45 sec each side</div><div class="ex-tags"><span class="tag t-flexibility">Flexibility</span></div></div></div>
+    </div>
+
+    <p style="text-align:center;color:#00d4ff;margin-top:15px;font-weight:bold;font-size:1.1em;">🏓💪 LOOSE, PRIMED, READY FOR THE COURT. LET'S BE GREAT, PAPPASITO! 👑</p>
+  </div>
+
+  <div class="plan-panel" id="plan-tue-nov17-upper-focus-6040">
     <h2 style="color:#00d4ff;margin:0 0 10px 0;">💪🔄 Tuesday, November 17 — Upper Focus</h2>
     <p style="color:#00d4ff;font-weight:bold;margin:5px 0;">60% Upper · 40% Lower · 60 Minutes · Supersets + Core + Cardio + Mobility</p>
     <p style="font-style:italic;color:#ff9f43;margin:5px 0 15px 0;">Day two back, still the Week 4 deload: about 75% of normal loads, effort around 7 out of 10. Mostly new movements. Nothing today matches a core card, so log everything in Quick Log.</p>
@@ -3253,7 +3297,7 @@ var ctrs={};for(var i=0;i<LIFTS.length;i++)ctrs[LIFTS[i]]=0;
 var logType='LEG DAY';
 var histFilt='all';
 var autoT=null;
-var currentPlan='tue-nov17-upper-focus-6040';
+var currentPlan='wed-nov25-fullbody-pickleball-primer';
 var _currentSessId=null;
 
 // S() and L() defined earlier (before HARDCODED_XP init)
@@ -3316,6 +3360,7 @@ function syncLogType(){
 // Maps each plan ID to the session type that should auto-fill on the Log tab
 // Non-standard exercises per plan — auto-populated into Quick Log (names pre-filled, fully editable)
 var PLAN_QUICK_EXERCISES={
+  'wed-nov25-fullbody-pickleball-primer':['Goblet Squat','Single-Arm DB Row','DB Romanian Deadlift','Incline DB Press','Cossack Lunge','Half-Kneeling Cable Pulldown','Cable Face Pull','Pallof Press','Hanging Knee Raise','Side Plank with Reach'],
   'tue-nov17-upper-focus-6040':['Neutral-Grip DB Bench Press','Chest-Supported DB Row','Arnold Press','Neutral-Grip Lat Pulldown','EZ-Bar Skull Crusher','Cable Rope Hammer Curl','Kettlebell Swing','Lateral Step-Up','Plank Pull-Through','Rower Intervals'],
   'mon-nov16-comeback-lower-6040':['Hacksaw Squat','DB Reverse Lunge','Incline DB Press','Cable Lateral Raise','Dead Bug','Pallof Press','Incline Treadmill Walk'],
   'wed-nov4-fullbody-mobility-strength-2':['KB Single-Leg RDL','Incline DB Press','Heel-Elevated Goblet Squat','Face Pull','Ab Wheel Rollouts','Pallof Press Rotations','Hanging Knee Raise'],
@@ -3566,6 +3611,7 @@ var PLAN_QUICK_EXERCISES={
 };
 
 var PLAN_TYPES={
+  'wed-nov25-fullbody-pickleball-primer':'FULL BODY · PICKLEBALL PRIMER',
   'tue-nov17-upper-focus-6040':'UPPER FOCUS · 60/40',
   'mon-nov16-comeback-lower-6040':'COMEBACK DAY · LOWER FOCUS · 60/40',
   'wed-nov4-fullbody-mobility-strength-2':'FULL BODY · MOBILITY STRENGTH II',
